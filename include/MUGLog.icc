@@ -1,0 +1,96 @@
+#include <sstream>
+#include <fstream>
+#include <stdexcept>
+
+#include "globals.hh"
+
+#include "magic_enum/magic_enum.hpp"
+
+template <typename T>
+inline void MUGLog::Print(MUGLog::LogLevel loglevelfile, MUGLog::LogLevel loglevelscreen, const T& msg, bool prefixed, bool do_flush) {
+
+  // open log file if not opened
+  if (MUGLog::IsOpen()) {
+    // write message in to log file
+    if (loglevelfile >= MUGLog::fMinimumLogLevelFile) {
+      if (prefixed) MUGLog::fOutputFileStream << MUGLog::GetPrefix(loglevelfile, MUGLog::fOutputFileStream);
+      MUGLog::fOutputFileStream << msg;
+      if (do_flush) MUGLog::fOutputFileStream << std::flush;
+    }
+  }
+
+  // write message to screen
+  if (loglevelscreen >= MUGLog::fMinimumLogLevelScreen) {
+    std::ostream& strm = loglevelscreen > MUGLog::LogLevel::warning ? G4cout : G4cerr;
+    if (prefixed) strm << MUGLog::GetPrefix(loglevelscreen, strm);
+    strm << msg;
+    if (do_flush) strm << std::flush;
+  }
+}
+
+// ---------------------------------------------------------
+
+template <typename T>
+inline void MUGLog::Out(MUGLog::LogLevel loglevelfile, MUGLog::LogLevel loglevelscreen, const T& message) {
+  // if this is the first call to Out(), call StartupInfo() first
+  if (!MUGLog::fFirstOutputDone) MUGLog::StartupInfo();
+
+  MUGLog::Print(loglevelfile, loglevelscreen, message, true);
+  MUGLog::Print(loglevelfile, loglevelscreen, "\n", false);
+
+  // throw exception if error is fatal
+  if (loglevelfile == fatal or loglevelscreen == fatal) {
+    throw std::runtime_error("A fatal exception has occurred, the execution cannot continue.");
+  }
+}
+
+// ---------------------------------------------------------
+
+template <typename T, typename... Args>
+inline void MUGLog::Out(MUGLog::LogLevel loglevelfile, MUGLog::LogLevel loglevelscreen, const T& t, const Args&... args) {
+
+  // if this is the first call to Out(), call StartupInfo() first
+  if (!MUGLog::fFirstOutputDone) MUGLog::StartupInfo();
+
+  MUGLog::Print(loglevelfile, loglevelscreen, t, true, false);
+  (MUGLog::Print(loglevelfile, loglevelscreen, args, false, false), ...);
+  MUGLog::Print(loglevelfile, loglevelscreen, "\n", false);
+
+  // throw exception if error is fatal
+  if (loglevelfile == fatal or loglevelscreen == fatal) {
+    throw std::runtime_error("A fatal exception has occurred, the execution cannot continue.");
+  }
+}
+
+// ---------------------------------------------------------
+
+template <typename... Args>
+inline void MUGLog::OutFormat(MUGLog::LogLevel loglevelfile, MUGLog::LogLevel loglevelscreen, const std::string& fmt, const Args&... args) {
+    try {
+        MUGLog::Out(loglevelfile, loglevelscreen, fmt::format(fmt, args...));
+    }
+    catch (fmt::v8::format_error& e) {
+        MUGLog::Out(MUGLog::error, "fmt library exception caugth: ", e.what());
+    }
+}
+
+// ---------------------------------------------------------
+
+template <MUGLog::Ansi color, typename T>
+inline std::string MUGLog::Colorize(const T& msg, std::ostream& os, bool bold) {
+
+  // check terminal capabilities before
+  if (!MUGLog::SupportsColors(os)) return msg;
+
+  std::ostringstream ss;
+  if (color == MUGLog::Ansi::unspecified) {
+      if (bold) ss << "\033[1m" << msg << "\033[0m";
+      else ss << msg;
+  }
+  else {
+      ss << "\033[" << (bold ? "1;" : "") << color << "m" << msg << "\033[0m";
+  }
+  return ss.str();
+}
+
+// vim: tabstop=2 shiftwidth=2 expandtab ft=cpp

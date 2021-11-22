@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+
+jobs:
+
+  test_on_linux:
+    name: Test on Linux (Ubuntu LTS)
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        container_version:
+        - G4.10.7
+        - slim
+
+    container: docker://gipert/remage-base:${{ matrix.container_version }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build project
+      run: .github/workflows/build.sh
+
+# vim: expandtab tabstop=2 shiftwidth=2

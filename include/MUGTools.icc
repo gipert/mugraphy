@@ -1,0 +1,33 @@
+#include <stdexcept>
+
+#include "globals.hh"
+#include "MUGLog.hh"
+
+#include "magic_enum/magic_enum.hpp"
+
+namespace MUGTools {
+
+    template <typename T>
+    T ToEnum(const std::string name, std::string prop_name="property") {
+        auto result = magic_enum::enum_cast<T>(name);
+        if (!result.has_value()) result = magic_enum::enum_cast<T>("k" + name);
+        if (!result.has_value()) {
+            MUGLog::OutFormat(MUGLog::error, "Illegal '{}' {} specified", name, prop_name);
+            throw std::bad_cast();
+        }
+        else return result.value();
+    }
+
+    template <typename T>
+    std::string GetCandidates() {
+        auto v = magic_enum::enum_names<T>();
+        std::string cand = "";
+        for (const auto& s : v) {
+            auto name = s[0] == 'k' ? s.substr(1, std::string::npos) : s;
+            cand += std::string(name) + " ";
+        }
+        return cand.substr(0, cand.size()-1);
+    }
+}
+
+// vim: shiftwidth=2 tabstop=2 expandtab ft=cpp
