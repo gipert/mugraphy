@@ -116,7 +116,7 @@ void MUGManager::Initialize() {
 void MUGManager::Run() {
 
   auto session = std::make_unique<G4UIExecutive>(fArgc, fArgv);
-  session->SetPrompt(MUGLog::Colorize<MUGLog::Ansi::unspecified>("remage> ", G4cout, true));
+  session->SetPrompt(MUGLog::Colorize<MUGLog::Ansi::unspecified>("mugraphy> ", G4cout, true));
 
   auto UI = G4UImanager::GetUIpointer();
   for (const auto& macro : fMacroFileNames) {

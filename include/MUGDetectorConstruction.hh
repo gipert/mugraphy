@@ -29,8 +29,8 @@ class MUGDetectorConstruction : public G4VUserDetectorConstruction {
     G4VPhysicalVolume* Construct() override;
     void ConstructSDandField() override;
 
+    G4VPhysicalVolume* DefineGeometry();
     inline void IncludeGDMLFile(std::string filename) { fGDMLFiles.emplace_back(filename); }
-    inline G4VPhysicalVolume* DefineGeometry() { return nullptr; }
     inline void SetMaxStepLimit(std::string name, double max_step) {
       fPhysVolStepLimits.insert_or_assign(name, max_step);
     }

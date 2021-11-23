@@ -34,20 +34,11 @@ void MUGMaterialTable::InitializeMaterials() {
   MUGLog::Out(MUGLog::detail, "Initializing materials");
 
   fMaterialAliases = {
-    {"Air",            "G4_AIR"},
-    {"Brass",          "G4_BRASS"},
-    {"Bronze",         "G4_BRONZE"},
-    {"Concrete",       "G4_CONCRETE"},
-    {"Germanium",      "G4_Ge"}, // with natural isotopic composition
-    {"Kapton",         "G4_KAPTON"},
-    {"LiquidArgon",    "G4_lAr"},
-    {"LiquidNitrogen", "G4_lN2"},
-    {"LiquidXenon",    "G4_lXe"},
-    {"Nylon",          "G4_NYLON-6-6"},
-    {"Teflon",         "G4_TEFLON"},
-    {"StainlessSteel", "G4_STAINLESS-STEEL"},
-    {"Vacuum",         "G4_Galactic"},
-    {"Water",          "G4_WATER"}
+    {"Vacuum",       "G4_Galactic"},
+    {"Air",          "G4_AIR"},
+    {"Concrete",     "G4_CONCRETE"},
+    {"Water",        "G4_WATER"},
+    {"ScintPlastic", "G4_PLASTIC_SC_VINYLTOLUENE"}
   };
 
   auto man = G4NistManager::Instance();

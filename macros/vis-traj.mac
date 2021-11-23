@@ -1,0 +1,26 @@
+/run/initialize
+
+/MUG/Geometry/PrintListOfLogicalVolumes
+/MUG/Geometry/PrintListOfPhysicalVolumes
+
+/vis/open OGLIQt
+/vis/scene/create
+/vis/sceneHandler/attach
+
+/vis/drawVolume
+
+/vis/viewer/set/defaultColour black
+/vis/viewer/set/background white
+
+# /vis/scene/add/trajectories smooth
+# /vis/scene/add/hits
+# /vis/scene/endOfEventAction accumulate
+
+# /RMG/Generator/Select GPS
+# /gps/particle ion
+# /gps/ion 27 60
+# /gps/energy 0 eV
+
+# /run/beamOn 10
+
+/vis/viewer/flush

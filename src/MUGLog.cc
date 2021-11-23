@@ -80,11 +80,11 @@ void MUGLog::OpenLogFile(const std::string& filename) {
 void MUGLog::StartupInfo() {
 
     std::string message = "";
-    message += "  _ __ ___ _ __ ___   __ _  __ _  ___ \n";
-    message += " | '__/ _ \\ '_ ` _ \\ / _` |/ _` |/ _ \\\n";
-    message += " | | |  __/ | | | | | (_| | (_| |  __/\n";
-    message += " |_|  \\___|_| |_| |_|\\__,_|\\__, |\\___| v" + MUGLog::fVersion + "\n";
-    message += "                           |___/      \n";
+
+    message += "\n";
+    message += "   _ _     _  __  _  /_\n";
+    message += "  / / //_//_///_|/_// //_/  v" + MUGLog::fVersion + "\n";
+    message += "          _/    /      _/\n";
 
     // write message to screen
     if (MUGLog::fMinimumLogLevelScreen < MUGLog::nothing)

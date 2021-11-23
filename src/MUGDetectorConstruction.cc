@@ -3,20 +3,72 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+#include "G4GDMLParser.hh"
+#include "G4UserLimits.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4PhysicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
-#include "G4UserLimits.hh"
-#include "G4GDMLParser.hh"
+#include "G4PVPlacement.hh"
+
+#include "G4Box.hh"
+#include "G4Tubs.hh"
+#include "G4Cons.hh"
+#include "G4Para.hh"
+#include "G4Trd.hh"
+#include "G4Trap.hh"
+#include "G4GenericTrap.hh"
+#include "G4Sphere.hh"
+#include "G4Orb.hh"
+#include "G4Polycone.hh"
+#include "G4GenericPolycone.hh"
+#include "G4Tet.hh"
+#include "G4UnionSolid.hh"
+#include "G4IntersectionSolid.hh"
+#include "G4SubtractionSolid.hh"
 
 #include "MUGMaterialTable.hh"
 #include "MUGLog.hh"
 #include "MUGNavigationTools.hh"
 
+namespace u = CLHEP;
+
 MUGDetectorConstruction::MUGDetectorConstruction() {
   fMaterialTable = std::make_unique<MUGMaterialTable>();
 
   this->DefineCommands();
+}
+
+G4VPhysicalVolume* MUGDetectorConstruction::DefineGeometry() {
+
+    auto world_s = new G4Box("WorldAir", 50*u::m, 50*u::m, 50*u::m);
+
+    auto world_l = new G4LogicalVolume(world_s,
+            MUGMaterialTable::GetMaterial("Air"),
+            "WorldAir");
+
+    auto world_p = new G4PVPlacement(nullptr,
+            G4ThreeVector(),
+            world_l,
+            "WorldAir",
+            0, false, 0);
+
+    auto pyramid_s = new G4GenericTrap("Pyramid",
+        20*u::m,
+        {{-20*u::m, -20*u::m}, {-20*u::m, 20*u::m}, {20*u::m, 20*u::m}, {20*u::m, -20*u::m},
+         {0*u::m, 0*u::m}, {0*u::m, 0*u::m}, {0*u::m, 0*u::m}, {0*u::m, 0*u::m}});
+
+    auto pyramid_l = new G4LogicalVolume(pyramid_s,
+        MUGMaterialTable::GetMaterial("Concrete"),
+        "Pyramid");
+
+    new G4PVPlacement(nullptr,
+        G4ThreeVector(),
+        pyramid_l,
+        "Pyramid",
+        world_l,
+        false, 0);
+
+    return world_p;
 }
 
 G4VPhysicalVolume* MUGDetectorConstruction::Construct() {
@@ -40,8 +92,6 @@ G4VPhysicalVolume* MUGDetectorConstruction::Construct() {
         "Did you forget to reimplement the base class method?");
   }
 
-  // TODO: build and return world volume?
-
   for (const auto& el : fPhysVolStepLimits) {
     MUGLog::OutFormat(MUGLog::debug, "Setting max user step size for volume '{}' to {}", el.first, el.second);
     auto vol = MUGNavigationTools::FindVolumeByName(el.first);
@@ -55,7 +105,19 @@ G4VPhysicalVolume* MUGDetectorConstruction::Construct() {
 }
 
 void MUGDetectorConstruction::ConstructSDandField() {
-  // TODO
+
+    auto det_s = new G4Box("Detector", 1*u::m, 1*u::m, 1*u::m);
+
+    auto det_l = new G4LogicalVolume(det_s,
+            MUGMaterialTable::GetMaterial("ScintPlastic"),
+            "Detector");
+
+    /* auto det_p = */ new G4PVPlacement(nullptr,
+            G4ThreeVector(30*u::m, 0, 0),
+            det_l,
+            "Detector",
+            fWorld->GetLogicalVolume(),
+            false, 0);
 }
 
 void MUGDetectorConstruction::DefineCommands() {
