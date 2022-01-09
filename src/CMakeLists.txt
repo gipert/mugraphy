@@ -8,6 +8,8 @@ set(PROJECT_PUBLIC_HEADERS
     ../include/MUGLog.icc
     ../include/ProjectInfo.hh
     ../include/MUGDetectorConstruction.hh
+    ../include/MUGPanelHit.hh
+    ../include/MUGPanelSD.hh
     ../include/MUGRunAction.hh
     ../include/MUGEventAction.hh
     ../include/MUGStackingAction.hh
@@ -19,7 +21,6 @@ set(PROJECT_PUBLIC_HEADERS
     ../include/MUGMaterialTable.hh
     ../include/MUGUIcmdStepLimit.hh
     ../include/MUGProcessesList.hh
-    ../include/MUGProcessesMessenger.hh
     ../include/MUGTools.hh
     ../include/MUGTools.icc
 )
@@ -29,6 +30,8 @@ set(PROJECT_SOURCES
     MUGGenerator.cc
     MUGLog.cc
     MUGDetectorConstruction.cc
+    MUGPanelHit.cc
+    MUGPanelSD.cc
     MUGEventAction.cc
     MUGRunAction.cc
     MUGStackingAction.cc
@@ -38,7 +41,6 @@ set(PROJECT_SOURCES
     MUGManager.cc
     MUGMaterialTable.cc
     MUGProcessesList.cc
-    MUGProcessesMessenger.cc
     MUGUIcmdStepLimit.cc
     mugraphy.cc
 )
