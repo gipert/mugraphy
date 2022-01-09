@@ -3,9 +3,10 @@
 
 #include <memory>
 
-#include "globals.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
 
+class EcoMug;
+class G4ParticleGun;
 class G4GenericMessenger;
 class MUGGenerator : public G4VUserPrimaryGeneratorAction {
 
@@ -22,6 +23,9 @@ class MUGGenerator : public G4VUserPrimaryGeneratorAction {
     void GeneratePrimaries(G4Event *event) override;
 
   private:
+
+    std::unique_ptr<EcoMug> fEcoMug;
+    std::unique_ptr<G4ParticleGun> fGun;
 
     std::unique_ptr<G4GenericMessenger> fMessenger;
     void DefineCommands();
