@@ -21,7 +21,7 @@ MUGMaterialTable::MUGMaterialTable() {
 G4Material* MUGMaterialTable::GetMaterial(std::string name) {
 
   auto man = G4NistManager::Instance();
-  if (MUGLog::GetLogLevelScreen() < MUGLog::detail) man->SetVerbose(1);
+  if (MUGLog::GetLogLevelScreen() <= MUGLog::debug) man->SetVerbose(2);
 
   if (fMaterialAliases.find(name) != fMaterialAliases.end()) {
     return man->FindOrBuildMaterial(fMaterialAliases[name]);

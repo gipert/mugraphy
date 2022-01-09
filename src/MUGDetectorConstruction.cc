@@ -109,7 +109,7 @@ void MUGDetectorConstruction::ConstructSDandField() {
     auto det_s = new G4Box("Detector", 1*u::m, 1*u::m, 1*u::m);
 
     auto det_l = new G4LogicalVolume(det_s,
-            MUGMaterialTable::GetMaterial("ScintPlastic"),
+            MUGMaterialTable::GetMaterial("Air"),
             "Detector");
 
     /* auto det_p = */ new G4PVPlacement(nullptr,
