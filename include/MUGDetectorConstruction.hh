@@ -7,13 +7,14 @@
 
 #include "globals.hh"
 #include "G4VUserDetectorConstruction.hh"
+#include "G4Cache.hh"
 
 #include "MUGMaterialTable.hh"
 #include "MUGNavigationTools.hh"
 
 class G4VPhysicalVolume;
 class G4GenericMessenger;
-class G4VPhysicalVolume;
+class MUGPanelSD;
 class MUGDetectorConstruction : public G4VUserDetectorConstruction {
 
   public:
@@ -45,7 +46,8 @@ class MUGDetectorConstruction : public G4VUserDetectorConstruction {
     std::unique_ptr<G4GenericMessenger> fMessenger;
     void DefineCommands();
 
-    G4VPhysicalVolume* fWorld;
+    G4VPhysicalVolume* fWorld = nullptr;
+    G4Cache<MUGPanelSD*> fSD = nullptr;
 };
 
 #endif

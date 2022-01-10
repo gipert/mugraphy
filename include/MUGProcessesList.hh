@@ -24,8 +24,8 @@ class MUGProcessesList : public G4VModularPhysicsList {
 
   protected:
 
-    void ConstructParticle() override;
-    void ConstructProcess() override;
+    // virtual void ConstructParticle() override;
+    // virtual void ConstructProcess() override;
 
   private:
 

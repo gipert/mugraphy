@@ -1,5 +1,6 @@
 #include "MUGProcessesList.hh"
 
+#include "G4ParticleTypes.hh"
 #include "G4RegionStore.hh"
 #include "G4HadronicParameters.hh"
 #include "G4HadronicProcessStore.hh"
@@ -25,6 +26,11 @@ MUGProcessesList::MUGProcessesList() :
   G4VModularPhysicsList::verboseLevel = 0;
   this->SetVerboseLevel(G4VModularPhysicsList::verboseLevel);
 
+  G4MuonMinus::Definition();
+  G4MuonPlus::Definition();
+
+  this->SetCuts();
+
   const auto& verbose = G4VModularPhysicsList::verboseLevel;
 
   // G4VUserPhysicsList::AddTransportation();
@@ -44,7 +50,7 @@ MUGProcessesList::MUGProcessesList() :
         G4HadronicParameters::Instance()->GetMinEnergyTransitionFTF_Cascade(),
         G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade()));
 
-  //Activate prodcuton of fission fragments in neutronHP
+  // Activate prodcuton of fission fragments in neutronHP
   G4ParticleHPManager::GetInstance()->SetProduceFissionFragments( true );
 
   // Stopping Physics
@@ -59,22 +65,6 @@ MUGProcessesList::MUGProcessesList() :
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void MUGProcessesList::ConstructParticle() {
-
-  MUGLog::Out(MUGLog::detail, "Constructing particles");
-
-  return;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void MUGProcessesList::ConstructProcess() {
-
-  return;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-
 void MUGProcessesList::SetCuts() {
 
   MUGLog::Out(MUGLog::debug, "Setting particle cut values");
@@ -84,7 +74,7 @@ void MUGProcessesList::SetCuts() {
   G4VUserPhysicsList::defaultCutValue = 1*u::mm;
 
   this->SetCutValue(0, "proton");
-  this->SetCutValue(1*u::mm, "mu-");
+  this->SetCutValue(1*u::m, "mu-");
 
   if (G4RegionStore::GetInstance()) {
     if (G4RegionStore::GetInstance()->size() > 1) {

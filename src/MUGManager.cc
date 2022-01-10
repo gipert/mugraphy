@@ -210,6 +210,8 @@ void MUGManager::SetRandSystemEntropySeed() {
 
 void MUGManager::DefineCommands() {
 
+  // TODO: uncomment ranges one it's fixed in G4
+
   fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Manager/",
       "General commands for controlling the application");
 
@@ -221,7 +223,7 @@ void MUGManager::DefineCommands() {
   fMessenger->DeclareMethod("PrintProgressModulo", &MUGManager::SetPrintModulo)
     .SetGuidance("How many processed events before progress information is displayed")
     .SetParameterName("n", false)
-    .SetRange("n > 0")
+    // .SetRange("n > 0")
     .SetStates(G4State_PreInit, G4State_Idle);
 
   fLogMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Manager/Logging/",
@@ -255,14 +257,14 @@ void MUGManager::DefineCommands() {
   fRandMessenger->DeclareMethod("Seed", &MUGManager::SetRandEngineSeed)
     .SetGuidance("Select the initial seed for randomization (CLHEP::HepRandom::setTheSeed)")
     .SetParameterName("n", false)
-    .SetRange("n >= 0")
+    // .SetRange("n >= 0")
     .SetDefaultValue("1")
     .SetStates(G4State_PreInit, G4State_Idle);
 
   fRandMessenger->DeclareMethod("InternalSeed", &MUGManager::SetRandEngineInternalSeed)
     .SetGuidance("Select the initial seed for randomization by using the internal CLHEP table")
     .SetParameterName("index", false)
-    .SetRange("index >= 0 && index < 430")
+    // .SetRange("index >= 0 && index < 430")
     .SetStates(G4State_PreInit, G4State_Idle);
 
   fRandMessenger->DeclareMethod("UseSystemEntropy", &MUGManager::SetRandSystemEntropySeed)

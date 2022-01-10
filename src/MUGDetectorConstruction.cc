@@ -29,6 +29,8 @@ namespace fs = std::filesystem;
 #include "MUGMaterialTable.hh"
 #include "MUGLog.hh"
 #include "MUGNavigationTools.hh"
+#include "MUGPanelSD.hh"
+#include "G4SDManager.hh"
 
 namespace u = CLHEP;
 
@@ -68,6 +70,19 @@ G4VPhysicalVolume* MUGDetectorConstruction::DefineGeometry() {
         world_l,
         false, 0);
 
+    auto det_s = new G4Box("Detector", 1*u::m, 1*u::m, 1*u::m);
+
+    auto det_l = new G4LogicalVolume(det_s,
+            MUGMaterialTable::GetMaterial("ScintPlastic"),
+            "Detector");
+
+    /* auto det_p = */ new G4PVPlacement(nullptr,
+            G4ThreeVector(30*u::m, 0, 0),
+            det_l,
+            "Detector",
+            world_l,
+            false, 0);
+
     return world_p;
 }
 
@@ -106,18 +121,11 @@ G4VPhysicalVolume* MUGDetectorConstruction::Construct() {
 
 void MUGDetectorConstruction::ConstructSDandField() {
 
-    auto det_s = new G4Box("Detector", 1*u::m, 1*u::m, 1*u::m);
-
-    auto det_l = new G4LogicalVolume(det_s,
-            MUGMaterialTable::GetMaterial("Air"),
-            "Detector");
-
-    /* auto det_p = */ new G4PVPlacement(nullptr,
-            G4ThreeVector(30*u::m, 0, 0),
-            det_l,
-            "Detector",
-            fWorld->GetLogicalVolume(),
-            false, 0);
+  if (!fSD.Get()) {
+    fSD.Put(new MUGPanelSD("Detector", "PanelHitsCollection"));
+    G4SDManager::GetSDMpointer()->AddNewDetector(fSD.Get());
+    this->SetSensitiveDetector("Detector", fSD.Get());
+  }
 }
 
 void MUGDetectorConstruction::DefineCommands() {
