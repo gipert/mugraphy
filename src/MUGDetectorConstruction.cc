@@ -9,6 +9,9 @@ namespace fs = std::filesystem;
 #include "G4PhysicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
+#include "G4ThreeVector.hh"
+#include "G4RotationMatrix.hh"
+#include "G4Transform3D.hh"
 
 #include "G4Box.hh"
 #include "G4Tubs.hh"
@@ -42,7 +45,18 @@ MUGDetectorConstruction::MUGDetectorConstruction() {
 
 G4VPhysicalVolume* MUGDetectorConstruction::DefineGeometry() {
 
-    auto world_s = new G4Box("WorldAir", 50*u::m, 50*u::m, 50*u::m);
+    auto eps = 1 * u::m;
+
+    auto pyr_h = 138.5 * u::m;
+    auto pyr_b = 230.3 * u::m;
+
+    auto pan_b = 3 * u::m;
+    auto pan_t = 10 * u::cm;
+
+    auto world_b = std::sqrt(2)*pyr_b + 2*eps;
+    fSkyHeight = world_b/2;
+
+    auto world_s = new G4Box("WorldAir", world_b/2, world_b/2, world_b/4);
 
     auto world_l = new G4LogicalVolume(world_s,
             MUGMaterialTable::GetMaterial("Air"),
@@ -55,8 +69,8 @@ G4VPhysicalVolume* MUGDetectorConstruction::DefineGeometry() {
             0, false, 0);
 
     auto pyramid_s = new G4GenericTrap("Pyramid",
-        20*u::m,
-        {{-20*u::m, -20*u::m}, {-20*u::m, 20*u::m}, {20*u::m, 20*u::m}, {20*u::m, -20*u::m},
+        pyr_h/2,
+        {{-pyr_b/2, -pyr_b/2}, {-pyr_b/2, pyr_b/2}, {pyr_b/2, pyr_b/2}, {pyr_b/2, -pyr_b/2},
          {0*u::m, 0*u::m}, {0*u::m, 0*u::m}, {0*u::m, 0*u::m}, {0*u::m, 0*u::m}});
 
     auto pyramid_l = new G4LogicalVolume(pyramid_s,
@@ -64,24 +78,22 @@ G4VPhysicalVolume* MUGDetectorConstruction::DefineGeometry() {
         "Pyramid");
 
     new G4PVPlacement(nullptr,
-        G4ThreeVector(),
+        G4ThreeVector(0, 0, -world_b/4 + pyr_h/2 + eps),
         pyramid_l,
         "Pyramid",
         world_l,
         false, 0);
 
-    auto det_s = new G4Box("Detector", 1*u::m, 1*u::m, 1*u::m);
+    auto det_s = new G4Box("Detector", pan_b/2, pan_b/2, pan_t/2);
 
     auto det_l = new G4LogicalVolume(det_s,
             MUGMaterialTable::GetMaterial("ScintPlastic"),
             "Detector");
 
-    /* auto det_p = */ new G4PVPlacement(nullptr,
-            G4ThreeVector(30*u::m, 0, 0),
-            det_l,
-            "Detector",
-            world_l,
-            false, 0);
+    auto trans = G4Translate3D(G4ThreeVector(pyr_b/2 + 10*u::m, 0, -world_b/4 + pan_b/2 + eps))
+                 * G4Rotate3D(-45, {0, 1, 0});
+
+    new G4PVPlacement(trans, det_l, "Detector", world_l, false, 0);
 
     return world_p;
 }

@@ -38,6 +38,7 @@ class MUGManager {
     inline int GetPrintModulo() { return fPrintModulo; }
 
     // setters
+    inline void SetNThreads(int n_thr) { fNThreads = n_thr; }
     inline void SetBatchMode(bool flag=true) { fBatchMode = flag; }
     inline void SetPrintModulo(int n_ev) { fPrintModulo = n_ev > 0 ? n_ev : -1; }
 
@@ -62,6 +63,7 @@ class MUGManager {
     bool fIsRandControlled;
     bool fBatchMode;
     int fPrintModulo;
+    int fNThreads;
 
     static MUGManager* fMUGManager;
 

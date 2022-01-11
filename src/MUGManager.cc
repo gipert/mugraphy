@@ -37,6 +37,7 @@ MUGManager::MUGManager(int argc, char** argv) :
   fIsRandControlled(false),
   fBatchMode(false),
   fPrintModulo(-1),
+  fNThreads(0),
   fG4RunManager(nullptr),
   fG4VisManager(nullptr),
   fProcessesList(nullptr),
@@ -75,11 +76,22 @@ void MUGManager::Initialize() {
       G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default));
   fG4RunManager->SetVerboseLevel(0);
 
+#ifdef G4MULTITHREADED
+  if (fNThreads <= 0) fNThreads = G4Threading::G4GetNumberOfCores();
+  else fNThreads = std::min(fNThreads, G4Threading::G4GetNumberOfCores());
+  fG4RunManager->SetNumberOfThreads(fNThreads);
+#endif
+
   // restore buffer
   std::cout.rdbuf(orig_buf);
 
   MUGLog::Out(MUGLog::debug, "Initializing default processes list");
   fProcessesList = new MUGProcessesList();
+  fG4RunManager->SetUserInitialization(fProcessesList);
+
+  MUGLog::Out(MUGLog::debug, "Initializing default (empty) detector");
+  fDetectorConstruction = new MUGDetectorConstruction();
+  fG4RunManager->SetUserInitialization(fDetectorConstruction);
 
   MUGLog::Out(MUGLog::debug, "Initializing default visualization manager");
   fG4VisManager = std::make_unique<G4VisExecutive>("quiet");
@@ -91,17 +103,10 @@ void MUGManager::Initialize() {
   }
   MUGLog::Out(MUGLog::detail, "Available graphic systems: ", _str);
 
-
   if (!fUserAction) {
     MUGLog::Out(MUGLog::debug, "Initializing default user action class");
     fUserAction = new MUGUserAction();
   }
-
-  MUGLog::Out(MUGLog::debug, "Initializing default (empty) detector");
-  fDetectorConstruction = new MUGDetectorConstruction();
-
-  fG4RunManager->SetUserInitialization(fDetectorConstruction);
-  fG4RunManager->SetUserInitialization(fProcessesList);
   fG4RunManager->SetUserInitialization(fUserAction);
 
   if (!fIsRandControlled) {
@@ -210,7 +215,7 @@ void MUGManager::SetRandSystemEntropySeed() {
 
 void MUGManager::DefineCommands() {
 
-  // TODO: uncomment ranges one it's fixed in G4
+  // TODO: uncomment ranges once it's fixed in G4
 
   fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Manager/",
       "General commands for controlling the application");

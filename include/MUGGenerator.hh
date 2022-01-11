@@ -24,6 +24,8 @@ class MUGGenerator : public G4VUserPrimaryGeneratorAction {
 
   private:
 
+    bool fIsInitialized = false;
+
     std::unique_ptr<EcoMug> fEcoMug;
     std::unique_ptr<G4ParticleGun> fGun;
 

@@ -12,6 +12,7 @@
 #include "ProjectInfo.hh"
 #include "MUGLog.hh"
 #include "MUGManager.hh"
+#include "MUGDetectorConstruction.hh"
 
 #include "EcoMug/EcoMug.h"
 
@@ -22,17 +23,24 @@ MUGGenerator::MUGGenerator() {
 
   fEcoMug = std::make_unique<EcoMug>();
   fGun = std::make_unique<G4ParticleGun>();
-
-  // FIXME: this seed is set before the main one is set, therefore it is always 1
-  MUGLog::OutFormat(MUGLog::debug, "EcoMug random seed: {}", CLHEP::HepRandom::getTheSeed());
-  fEcoMug->SetSeed(CLHEP::HepRandom::getTheSeed());
-  // TODO: get sky height from real detector
-  fEcoMug->SetUseHSphere();
-  fEcoMug->SetHSphereRadius(40); // m
-  fEcoMug->SetHSphereCenterPosition({0, 0, 0});
 }
 
 void MUGGenerator::GeneratePrimaries(G4Event* event) {
+
+  // TODO: reset flag after run is over
+  if (!fIsInitialized) {
+
+    fEcoMug->SetUseHSphere();
+    auto sky_height = MUGManager::GetMUGManager()->GetDetectorConstruction()->GetSkyHeight();
+    if (sky_height <= 0) MUGLog::Out(MUGLog::fatal, "Sky height undefined, aborting");
+    fEcoMug->SetHSphereRadius(sky_height / u::m); // no units, the user can decide. I use meters
+    fEcoMug->SetHSphereCenterPosition({0, 0, 0}); //
+
+    MUGLog::OutFormat(MUGLog::debug, "EcoMug random seed: {}", CLHEP::HepRandom::getTheSeed());
+    fEcoMug->SetSeed(CLHEP::HepRandom::getTheSeed());
+
+    fIsInitialized = true;
+  }
 
   fEcoMug->Generate();
 
