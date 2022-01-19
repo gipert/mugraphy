@@ -1,10 +1,15 @@
 #ifndef _MUG_MANAGEMENT_STACKING_ACTION_HH_
 #define _MUG_MANAGEMENT_STACKING_ACTION_HH_
 
+#include <memory>
+
 #include "G4UserStackingAction.hh"
+
+#include "MUGLog.hh"
 
 class G4Track;
 class MUGEventAction;
+class G4GenericMessenger;
 class MUGStackingAction : public G4UserStackingAction {
 
   public:
@@ -21,9 +26,19 @@ class MUGStackingAction : public G4UserStackingAction {
     void NewStage() override;
     void PrepareNewEvent() override;
 
+    void BeginOfRunAction();
+    inline void EndOfRunAction() {};
+
+    void KillSecondaries(bool flag=true) { fKillSecondaries = flag; }
+
   private:
 
     MUGEventAction* fEventAction;
+
+    std::unique_ptr<G4GenericMessenger> fMessenger;
+    void DefineCommands();
+
+    bool fKillSecondaries = true;
 };
 
 #endif
