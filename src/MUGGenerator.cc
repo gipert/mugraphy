@@ -25,22 +25,23 @@ MUGGenerator::MUGGenerator() {
   fGun = std::make_unique<G4ParticleGun>();
 }
 
+void MUGGenerator::BeginOfRunAction() {
+
+  auto sky_height = 140 * u::m;
+  auto world_side = 330 * u::m;
+  auto ground_depth = 50 * u::m;
+
+  MUGLog::Out(MUGLog::debug, "Configuring EcoMug");
+  fEcoMug->SetUseHSphere();
+  fEcoMug->SetHSphereRadius(world_side/2 / u::m); // no units, the user can decide. I use meters
+  fEcoMug->SetHSphereCenterPosition({0, 0, (ground_depth - (sky_height+ground_depth)/2) / u::m}); //
+
+  // TODO: check if this makes sense
+  MUGLog::OutFormat(MUGLog::debug, "EcoMug random seed: {}", CLHEP::HepRandom::getTheSeed());
+  fEcoMug->SetSeed(CLHEP::HepRandom::getTheSeed());
+}
+
 void MUGGenerator::GeneratePrimaries(G4Event* event) {
-
-  // TODO: reset flag after run is over
-  if (!fIsInitialized) {
-
-    fEcoMug->SetUseHSphere();
-    auto sky_height = MUGManager::GetMUGManager()->GetDetectorConstruction()->GetSkyHeight();
-    if (sky_height <= 0) MUGLog::Out(MUGLog::fatal, "Sky height undefined, aborting");
-    fEcoMug->SetHSphereRadius(sky_height / u::m); // no units, the user can decide. I use meters
-    fEcoMug->SetHSphereCenterPosition({0, 0, 0}); //
-
-    MUGLog::OutFormat(MUGLog::debug, "EcoMug random seed: {}", CLHEP::HepRandom::getTheSeed());
-    fEcoMug->SetSeed(CLHEP::HepRandom::getTheSeed());
-
-    fIsInitialized = true;
-  }
 
   fEcoMug->Generate();
 

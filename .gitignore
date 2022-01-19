@@ -10,3 +10,4 @@ compile_commands.json
 *.DS_Store
 *.swp
 *.swo
+__pycache__

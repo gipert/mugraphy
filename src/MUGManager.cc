@@ -63,8 +63,6 @@ MUGManager::~MUGManager() {
 
 void MUGManager::Initialize() {
 
-  MUGLog::Out(MUGLog::detail, "Initializing application");
-
   MUGLog::Out(MUGLog::debug, "Initializing default run manager");
 
   // Suppress the Geant4 header:
@@ -216,6 +214,7 @@ void MUGManager::SetRandSystemEntropySeed() {
 void MUGManager::DefineCommands() {
 
   // TODO: uncomment ranges once it's fixed in G4
+  // TODO: log level etc. are set via macro command too late, this->Initialize is skipped
 
   fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Manager/",
       "General commands for controlling the application");

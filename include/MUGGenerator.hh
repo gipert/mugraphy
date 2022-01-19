@@ -21,10 +21,10 @@ class MUGGenerator : public G4VUserPrimaryGeneratorAction {
     MUGGenerator& operator=(MUGGenerator&&)      = delete;
 
     void GeneratePrimaries(G4Event *event) override;
+    void BeginOfRunAction();
+    inline void EndOfRunAction() {}
 
   private:
-
-    bool fIsInitialized = false;
 
     std::unique_ptr<EcoMug> fEcoMug;
     std::unique_ptr<G4ParticleGun> fGun;

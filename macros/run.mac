@@ -1,0 +1,12 @@
+# /MUG/Manager/Logging/LogLevelScreen debug
+# /MUG/Manager/Randomization/Seed 123
+
+/run/initialize
+
+# /MUG/Stacking/KillSecondaries false
+# /MUG/Stacking/KillSecondaries true
+
+# /MUG/Geometry/PrintListOfLogicalVolumes
+# /MUG/Geometry/PrintListOfPhysicalVolumes
+
+/run/beamOn 100

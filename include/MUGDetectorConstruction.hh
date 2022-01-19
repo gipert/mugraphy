@@ -37,7 +37,6 @@ class MUGDetectorConstruction : public G4VUserDetectorConstruction {
     }
     inline void PrintListOfLogicalVolumes() { MUGNavigationTools::PrintListOfLogicalVolumes(); }
     inline void PrintListOfPhysicalVolumes() { MUGNavigationTools::PrintListOfPhysicalVolumes(); }
-    inline double GetSkyHeight() { return fSkyHeight; }
 
   private:
 
@@ -47,7 +46,6 @@ class MUGDetectorConstruction : public G4VUserDetectorConstruction {
     std::unique_ptr<G4GenericMessenger> fMessenger;
     void DefineCommands();
 
-    double fSkyHeight = 0;
     G4VPhysicalVolume* fWorld = nullptr;
     G4Cache<MUGPanelSD*> fSD = nullptr;
 };

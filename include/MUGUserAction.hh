@@ -1,8 +1,6 @@
 #ifndef _MUG_MANAGEMENT_USER_ACTION_HH_
 #define _MUG_MANAGEMENT_USER_ACTION_HH_
 
-#include "globals.hh"
-
 #include "G4VUserActionInitialization.hh"
 
 class MUGUserAction : public G4VUserActionInitialization {
