@@ -3,6 +3,7 @@
 /doc/latex
 build
 .local
+*.step
 
 compile_commands.json
 
