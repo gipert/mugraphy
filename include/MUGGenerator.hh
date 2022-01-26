@@ -3,11 +3,15 @@
 
 #include <memory>
 
+#include "G4GenericMessenger.hh"
+#include "G4ParticleGun.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
+#include "CLHEP/Units/SystemOfUnits.h"
 
-class EcoMug;
-class G4ParticleGun;
-class G4GenericMessenger;
+#include "EcoMug/EcoMug.h"
+
+namespace u = CLHEP;
+
 class MUGGenerator : public G4VUserPrimaryGeneratorAction {
 
   public:
@@ -26,11 +30,18 @@ class MUGGenerator : public G4VUserPrimaryGeneratorAction {
 
   private:
 
-    std::unique_ptr<EcoMug> fEcoMug;
-    std::unique_ptr<G4ParticleGun> fGun;
+    std::unique_ptr<EcoMug> fEcoMug = nullptr;
+    std::unique_ptr<G4ParticleGun> fGun = nullptr;
 
-    std::unique_ptr<G4GenericMessenger> fMessenger;
+    std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
     void DefineCommands();
+
+    float fMomentumMin = 0 * u::GeV;
+    float fMomentumMax = 1 * u::TeV;
+    float fThetaMin    = 0 * u::deg;
+    float fThetaMax    = 90 * u::deg;
+    float fPhiMin      = 0 * u::deg;
+    float fPhiMax      = 360 * u::deg;
 };
 
 #endif
