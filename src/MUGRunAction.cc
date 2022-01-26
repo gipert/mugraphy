@@ -4,8 +4,10 @@
 #include <ctime>
 #include <cstdlib>
 
+#include "G4GenericMessenger.hh"
 #include "G4Run.hh"
 #include "G4RunManager.hh"
+#include "G4AnalysisManager.hh"
 
 #include "MUGRun.hh"
 #include "MUGLog.hh"
@@ -20,13 +22,52 @@ G4Run* MUGRunAction::GenerateRun() {
   return fMUGRun;
 }
 
-MUGRunAction::MUGRunAction(MUGGenerator* gene) {
-  fMUGGenerator = gene;
+MUGRunAction::MUGRunAction(MUGEventAction* ev_action) :
+  fEventAction(ev_action) {
+
+  this->DefineCommands();
+  this->SetupAnalysisManager();
+}
+
+MUGRunAction::MUGRunAction(MUGEventAction* ev_action, MUGGenerator* gene) :
+  fEventAction(ev_action),
+  fMUGGenerator(gene) {
+
+  this->DefineCommands();
+  this->SetupAnalysisManager();
+}
+
+MUGRunAction::~MUGRunAction() {
+  // G4AnalysisManager::Instance()->Clear();
+}
+
+void MUGRunAction::SetupAnalysisManager() {
+
+  auto ana_man = G4AnalysisManager::Instance();
+  if (MUGLog::GetLogLevelScreen() <= MUGLog::debug) ana_man->SetVerboseLevel(1);
+  else ana_man->SetVerboseLevel(0);
+
+  if (!MUGManager::IsExecSequential()) ana_man->SetNtupleMerging(true);
+
+  // create tuples
+  ana_man->CreateNtuple("ntuples", "Event information");
+  ana_man->CreateNtupleFColumn("energy", fEventAction->GetEdepVec());
+  ana_man->CreateNtupleFColumn("xhit",   fEventAction->GetXHitVec());
+  ana_man->CreateNtupleFColumn("yhit",   fEventAction->GetYHitVec());
+  ana_man->CreateNtupleFColumn("zhit",   fEventAction->GetZHitVec());
+  ana_man->CreateNtupleFColumn("theta",  fEventAction->GetThetaVec());
+  ana_man->CreateNtupleFColumn("phi",    fEventAction->GetPhiVec());
+  ana_man->FinishNtuple();
 }
 
 void MUGRunAction::BeginOfRunAction(const G4Run*) {
 
   MUGLog::OutDev(MUGLog::debug, "Start of run action");
+
+  auto ana_man = G4AnalysisManager::Instance();
+  if (fOutputFile.empty()) MUGLog::Out(MUGLog::fatal, "Please set an output file name");
+  MUGLog::Out(MUGLog::summary, "Opening output file: ", fOutputFile); // TODO: realpath
+  ana_man->OpenFile(fOutputFile);
 
   if (fMUGGenerator) { fMUGGenerator->BeginOfRunAction(); }
 
@@ -57,6 +98,10 @@ void MUGRunAction::EndOfRunAction(const G4Run*) {
 
   if (fMUGGenerator) fMUGGenerator->EndOfRunAction();
 
+  auto ana_man = G4AnalysisManager::Instance();
+  ana_man->Write();
+  ana_man->CloseFile();
+
   if (this->IsMaster()) {
     auto time_now = std::chrono::system_clock::now();
 
@@ -84,4 +129,16 @@ void MUGRunAction::EndOfRunAction(const G4Run*) {
   }
 }
 
+void MUGRunAction::DefineCommands() {
+
+  fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Output/",
+      "Commands for controlling the simulation output");
+
+  fMessenger->DeclareProperty("FileName", fOutputFile)
+    .SetGuidance("")
+    .SetParameterName("filename", false)
+    .SetToBeBroadcasted(true)
+    .SetStates(G4State_PreInit, G4State_Idle);
+
+}
 // vim: tabstop=2 shiftwidth=2 expandtab

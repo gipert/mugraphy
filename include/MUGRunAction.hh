@@ -8,28 +8,36 @@
 
 class G4Run;
 class MUGRun;
+class MUGEventAction;
 class MUGGenerator;
+class G4GenericMessenger;
 class MUGRunAction : public G4UserRunAction {
 
   public:
 
-    MUGRunAction() = default;
-    MUGRunAction(MUGGenerator*);
-    ~MUGRunAction() = default;
+    MUGRunAction(MUGEventAction*);
+    MUGRunAction(MUGEventAction*, MUGGenerator*);
+    ~MUGRunAction();
 
     MUGRunAction           (MUGRunAction const&) = delete;
     MUGRunAction& operator=(MUGRunAction const&) = delete;
     MUGRunAction           (MUGRunAction&&)      = delete;
     MUGRunAction& operator=(MUGRunAction&&)      = delete;
 
+    void SetupAnalysisManager();
     G4Run* GenerateRun() override;
     void BeginOfRunAction(const G4Run*) override;
     void EndOfRunAction(const G4Run*) override;
 
   private:
 
-    MUGRun* fMUGRun;
-    MUGGenerator* fMUGGenerator;
+    std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
+    void DefineCommands();
+
+    MUGRun* fMUGRun = nullptr;
+    MUGEventAction* fEventAction = nullptr;
+    MUGGenerator* fMUGGenerator = nullptr;
+    std::string fOutputFile = "detector-hits.hdf5";
 };
 
 #endif

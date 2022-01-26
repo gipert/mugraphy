@@ -1,6 +1,6 @@
 #include "MUGMaterialTable.hh"
 
-#include "globals.hh"
+#include "CLHEP/Units/SystemOfUnits.h"
 #include "G4UnitsTable.hh"
 #include "G4Material.hh"
 #include "G4NistManager.hh"

@@ -3,7 +3,6 @@
 
 #include <memory>
 
-#include "globals.hh"
 #include "G4Event.hh"
 #include "G4UserEventAction.hh"
 
@@ -24,10 +23,28 @@ class MUGEventAction : public G4UserEventAction {
     void BeginOfEventAction(const G4Event*) override;
     void EndOfEventAction(const G4Event*) override;
 
+    // getters
+    inline std::vector<float>& GetEdepVec()  { return fEdep; }
+    inline std::vector<float>& GetXHitVec()  { return fXHit; }
+    inline std::vector<float>& GetYHitVec()  { return fYHit; }
+    inline std::vector<float>& GetZHitVec()  { return fZHit; }
+    inline std::vector<float>& GetThetaVec() { return fTheta; }
+    inline std::vector<float>& GetPhiVec()   { return fPhi; }
+
   private:
 
     std::unique_ptr<G4GenericMessenger> fMessenger;
     void DefineCommands();
+
+    int fHitCollID = -1;
+
+    // per sub-detector
+    std::vector<float> fEdep;
+    std::vector<float> fXHit;
+    std::vector<float> fYHit;
+    std::vector<float> fZHit;
+    std::vector<float> fTheta;
+    std::vector<float> fPhi;
 };
 
 #endif

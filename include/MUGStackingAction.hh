@@ -33,9 +33,9 @@ class MUGStackingAction : public G4UserStackingAction {
 
   private:
 
-    MUGEventAction* fEventAction;
+    MUGEventAction* fEventAction = nullptr;
 
-    std::unique_ptr<G4GenericMessenger> fMessenger;
+    std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
     void DefineCommands();
 
     bool fKillSecondaries = true;

@@ -26,8 +26,8 @@ class MUGMaterialTable {
 
     void InitializeMaterials();
 
-    std::unique_ptr<G4GenericMessenger> fMessenger;
-    std::unique_ptr<G4GenericMessenger> fLArMessenger;
+    std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
+    std::unique_ptr<G4GenericMessenger> fLArMessenger = nullptr;
     void DefineCommands();
 
     static std::map<std::string, std::string> fMaterialAliases;

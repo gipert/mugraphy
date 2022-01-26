@@ -21,7 +21,7 @@ class MUGSteppingAction : public G4UserSteppingAction {
 
   private:
 
-    MUGEventAction* fEventAction;
+    MUGEventAction* fEventAction = nullptr;
 };
 
 #endif

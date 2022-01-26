@@ -29,7 +29,7 @@ class MUGProcessesList : public G4VModularPhysicsList {
 
   private:
 
-    std::unique_ptr<G4GenericMessenger> fMessenger;
+    std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
     void DefineCommands();
 };
 

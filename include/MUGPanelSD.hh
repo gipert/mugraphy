@@ -32,7 +32,7 @@ class MUGPanelSD : public G4VSensitiveDetector {
 
     MUGPanelHitsCollection* fHitsCollection = nullptr;
 
-    std::unique_ptr<G4GenericMessenger> fMessenger;
+    std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
     void DefineCommands();
 };
 

@@ -5,6 +5,7 @@
 
 #include "G4VHit.hh"
 #include "G4THitsCollection.hh"
+#include "G4ThreeVector.hh"
 #include "G4Allocator.hh"
 
 class G4GenericMessenger;
@@ -25,10 +26,27 @@ class MUGPanelHit : public G4VHit {
     inline void* operator new(size_t);
     inline void  operator delete(void*);
 
+    inline bool IsInitialized() { return fIsInitialized; }
+
+    void Add(double edep, const G4ThreeVector& pos, const G4ThreeVector& dir);
+
+    // getters
+    inline const G4ThreeVector& GetHitPos() { return fHitPos; }
+    inline const G4ThreeVector& GetMomDir() { return fMomDir; }
+    inline double GetEdep() { return fEdep; }
+
+    // TODO: override Draw
+    void Print() override;
+
   private:
 
-    std::unique_ptr<G4GenericMessenger> fMessenger;
+    std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
     void DefineCommands();
+
+    bool fIsInitialized = false;
+    double fEdep = 0;
+    G4ThreeVector fHitPos;
+    G4ThreeVector fMomDir;
 };
 
 typedef G4THitsCollection<MUGPanelHit> MUGPanelHitsCollection;

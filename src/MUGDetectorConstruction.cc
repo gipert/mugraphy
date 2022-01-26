@@ -13,6 +13,7 @@ namespace fs = std::filesystem;
 #include "G4RotationMatrix.hh"
 #include "G4Transform3D.hh"
 #include "G4VisAttributes.hh"
+#include "CLHEP/Units/SystemOfUnits.h"
 
 #include "G4Box.hh"
 #include "G4Tubs.hh"
@@ -92,11 +93,13 @@ G4VPhysicalVolume* MUGDetectorConstruction::Construct() {
 
 void MUGDetectorConstruction::ConstructSDandField() {
 
-  // if (!fSD.Get()) {
-  //   fSD.Put(new MUGPanelSD("Detector", "PanelHitsCollection"));
-  //   G4SDManager::GetSDMpointer()->AddNewDetector(fSD.Get());
-  //   this->SetSensitiveDetector("Detector", fSD.Get());
-  // }
+  auto sd_man = G4SDManager::GetSDMpointer();
+  if (MUGLog::GetLogLevelScreen() <= MUGLog::debug) sd_man->SetVerboseLevel(1);
+  else sd_man->SetVerboseLevel(0);
+
+  auto sd = new MUGPanelSD("Detector", "Panels");
+  sd_man->AddNewDetector(sd);
+  this->SetSensitiveDetector("Detector", sd);
 }
 
 void MUGDetectorConstruction::DefineCommands() {

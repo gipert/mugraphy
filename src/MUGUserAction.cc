@@ -9,16 +9,17 @@
 
 void MUGUserAction::BuildForMaster() const {
 
+  auto event_action = new MUGEventAction();
   // the master thread does not simulate anything, no primary generator is needed
-  this->SetUserAction(new MUGRunAction());
+  this->SetUserAction(new MUGRunAction(event_action));
 }
 
 void MUGUserAction::Build() const {
 
   auto generator_primary = new MUGGenerator();
-  this->SetUserAction(generator_primary);
-  this->SetUserAction(new MUGRunAction(generator_primary));
   auto event_action = new MUGEventAction();
+  this->SetUserAction(generator_primary);
+  this->SetUserAction(new MUGRunAction(event_action, generator_primary));
   this->SetUserAction(event_action);
   this->SetUserAction(new MUGStackingAction(event_action));
   this->SetUserAction(new MUGSteppingAction(event_action));

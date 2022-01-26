@@ -22,7 +22,7 @@ class MUGTrackingAction : public G4UserTrackingAction {
 
   private:
 
-    MUGEventAction* fEventAction;
+    MUGEventAction* fEventAction = nullptr;
 };
 
 #endif

@@ -47,7 +47,6 @@ class MUGDetectorConstruction : public G4VUserDetectorConstruction {
     void DefineCommands();
 
     G4VPhysicalVolume* fWorld = nullptr;
-    G4Cache<MUGPanelSD*> fSD = nullptr;
 };
 
 #endif

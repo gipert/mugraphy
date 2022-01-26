@@ -75,6 +75,7 @@ void MUGProcessesList::SetCuts() {
 
   this->SetCutValue(0, "proton");
   this->SetCutValue(1*u::m, "mu-");
+  this->SetCutValue(1*u::m, "mu+");
 
   if (G4RegionStore::GetInstance()) {
     if (G4RegionStore::GetInstance()->size() > 1) {
@@ -85,6 +86,7 @@ void MUGProcessesList::SetCuts() {
         auto cuts = region->GetProductionCuts();
         if (!cuts) cuts = new G4ProductionCuts;
         cuts->SetProductionCut(1*u::mm, "mu-");
+        cuts->SetProductionCut(1*u::mm, "mu+");
         region->SetProductionCuts(cuts);
       }
     }

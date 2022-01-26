@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 
     CLI11_PARSE(app, argc, argv);
 
-    // MUGLog::SetLogLevel(MUGLog::debug);
+    MUGLog::SetLogLevel(MUGLog::debug);
 
     MUGManager manager(argc, argv);
     // manager.GetManagementDetectorConstruction()->IncludeGDMLFile("gdml/main.gdml");
