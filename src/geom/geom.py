@@ -38,7 +38,7 @@ concrete_s = geant4.solid.Union("Concrete", pyramid_s, ground_s,
 
 concrete_l = geant4.LogicalVolume(concrete_s, 'G4_CONCRETE', 'Concrete', reg)
 geant4.PhysicalVolume([0, 0, 0], [0, 0, -world_height/2 + h + ground_depth - eps, 'm'],
-        concrete_l, 'Pyramid', world_l, reg)
+        concrete_l, 'Concrete', world_l, reg)
 
 r = stl.Reader("khufu-pyramid.stl", solidname="Cavities", scale=1000, registry=reg)
 cavities_s = r.getSolid()
@@ -53,7 +53,7 @@ queen_cham_floor = [0, -22, 18, 'm']
 geant4.PhysicalVolume([0, 0, 0], queen_cham_floor, det_l,
         'LowerPanel', cavities_l, reg)
 
-queen_cham_floor[2] += 3
+queen_cham_floor[2] += 1
 geant4.PhysicalVolume([0, 0, 0], queen_cham_floor, det_l,
         'UpperPanel', cavities_l, reg)
 

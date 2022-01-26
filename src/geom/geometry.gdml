@@ -4490,7 +4490,7 @@
 	</solids>
 	<structure>
 		<volume name="Detector">
-			<materialref ref="G4_PLASTIC_SC_VINYLTOLUENE"/>
+			<materialref ref="G4_PHOTO_EMULSION"/>
 			<solidref ref="Detector"/>
 		</volume>
 		<volume name="Cavities">
@@ -4502,7 +4502,7 @@
 			</physvol>
 			<physvol name="UpperPanel">
 				<volumeref ref="Detector"/>
-				<position name="UpperPanel_pos" x="0.000000000000000" y="-22.000000000000000" z="21.000000000000000" unit="m"/>
+				<position name="UpperPanel_pos" x="0.000000000000000" y="-22.000000000000000" z="19.000000000000000" unit="m"/>
 			</physvol>
 		</volume>
 		<volume name="Concrete">
@@ -4516,9 +4516,9 @@
 		<volume name="WorldAir">
 			<materialref ref="G4_AIR"/>
 			<solidref ref="WorldAir"/>
-			<physvol name="Pyramid">
+			<physvol name="Concrete">
 				<volumeref ref="Concrete"/>
-				<position name="Pyramid_pos" x="0.000000000000000" y="0.000000000000000" z="9.400000000000000" unit="m"/>
+				<position name="Concrete_pos" x="0.000000000000000" y="0.000000000000000" z="9.400000000000000" unit="m"/>
 			</physvol>
 		</volume>
 	</structure>
