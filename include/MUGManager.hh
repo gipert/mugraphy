@@ -37,6 +37,11 @@ class MUGManager {
     G4VUserPhysicsList* GetProcessesList();
     inline int GetPrintModulo() { return fPrintModulo; }
 
+    inline static bool IsExecSequential() {
+      return MUGManager::GetMUGManager()->GetG4RunManager()->GetRunManagerType()
+        == G4RunManager::RMType::sequentialRM;
+    }
+
     // setters
     inline void SetNThreads(int n_thr) { fNThreads = n_thr; }
     inline void SetBatchMode(bool flag=true) { fBatchMode = flag; }
@@ -67,17 +72,17 @@ class MUGManager {
 
     static MUGManager* fMUGManager;
 
-    std::unique_ptr<G4RunManager> fG4RunManager;
-    std::unique_ptr<G4VisManager> fG4VisManager;
+    std::unique_ptr<G4RunManager> fG4RunManager = nullptr;
+    std::unique_ptr<G4VisManager> fG4VisManager = nullptr;
 
-    G4VUserPhysicsList* fProcessesList;
-    MUGDetectorConstruction* fDetectorConstruction;
-    MUGUserAction* fUserAction;
+    G4VUserPhysicsList* fProcessesList = nullptr;
+    MUGDetectorConstruction* fDetectorConstruction = nullptr;
+    MUGUserAction* fUserAction = nullptr;
 
     // messenger stuff
-    std::unique_ptr<G4GenericMessenger> fMessenger;
-    std::unique_ptr<G4GenericMessenger> fLogMessenger;
-    std::unique_ptr<G4GenericMessenger> fRandMessenger;
+    std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
+    std::unique_ptr<G4GenericMessenger> fLogMessenger = nullptr;
+    std::unique_ptr<G4GenericMessenger> fRandMessenger = nullptr;
     void DefineCommands();
 };
 

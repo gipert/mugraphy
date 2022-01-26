@@ -37,12 +37,7 @@ MUGManager::MUGManager(int argc, char** argv) :
   fIsRandControlled(false),
   fBatchMode(false),
   fPrintModulo(-1),
-  fNThreads(0),
-  fG4RunManager(nullptr),
-  fG4VisManager(nullptr),
-  fProcessesList(nullptr),
-  fDetectorConstruction(nullptr),
-  fUserAction(nullptr) {
+  fNThreads(0) {
 
   if (fMUGManager) MUGLog::Out(MUGLog::fatal, "MUGManager must be singleton!");
   fMUGManager = this;
@@ -74,11 +69,11 @@ void MUGManager::Initialize() {
       G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default));
   fG4RunManager->SetVerboseLevel(0);
 
-#ifdef G4MULTITHREADED
-  if (fNThreads <= 0) fNThreads = G4Threading::G4GetNumberOfCores();
-  else fNThreads = std::min(fNThreads, G4Threading::G4GetNumberOfCores());
-  fG4RunManager->SetNumberOfThreads(fNThreads);
-#endif
+  if (!this->IsExecSequential()) {
+    if (fNThreads <= 0) fNThreads = G4Threading::G4GetNumberOfCores();
+    else fNThreads = std::min(fNThreads, G4Threading::G4GetNumberOfCores());
+    fG4RunManager->SetNumberOfThreads(fNThreads);
+}
 
   // restore buffer
   std::cout.rdbuf(orig_buf);
@@ -215,6 +210,7 @@ void MUGManager::DefineCommands() {
 
   // TODO: uncomment ranges once it's fixed in G4
   // TODO: log level etc. are set via macro command too late, this->Initialize is skipped
+  // TODO: log level can be set via cmd line flag
 
   fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Manager/",
       "General commands for controlling the application");
