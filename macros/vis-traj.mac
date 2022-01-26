@@ -1,5 +1,6 @@
 # /tracking/verbose 1
 
+# /MUG/Manager/Logging/LogLevelScreen debug
 /MUG/Geometry/IncludeGDMLFile /home/gipert/sw/src/mugraphy/src/geom/geometry.gdml
 
 /run/initialize
@@ -12,10 +13,15 @@
 
 /vis/viewer/set/defaultColour black
 /vis/viewer/set/background white
+/vis/viewer/set/viewpointVector 1 0 0
+/vis/viewer/set/upVector 0 0 1
 
 /vis/scene/add/trajectories smooth
 /vis/scene/add/hits
 /vis/scene/endOfEventAction accumulate
+
+/MUG/Generator/ThetaMax 20 deg
+/MUG/Generator/MomentumMin 20 GeV/c
 
 /run/beamOn 10
 

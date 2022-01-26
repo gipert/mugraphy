@@ -1,7 +1,13 @@
-# /MUG/Manager/Logging/LogLevelScreen debug
-# /MUG/Manager/Randomization/Seed 123
+/MUG/Manager/Logging/LogLevelScreen summary
+# /MUG/Manager/Randomization/Seed 2
+
+/MUG/Geometry/IncludeGDMLFile /home/gipert/sw/src/mugraphy/src/geom/geometry.gdml
+/MUG/Output/FileName detector-hits.root
 
 /run/initialize
+
+/MUG/Generator/ThetaMax 20 deg
+/MUG/Generator/MomentumMin 20 GeV/c
 
 # /MUG/Stacking/KillSecondaries false
 # /MUG/Stacking/KillSecondaries true
@@ -9,4 +15,4 @@
 # /MUG/Geometry/PrintListOfLogicalVolumes
 # /MUG/Geometry/PrintListOfPhysicalVolumes
 
-/run/beamOn 100
+/run/beamOn 1000
