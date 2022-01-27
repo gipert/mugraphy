@@ -2,6 +2,7 @@
 #define _MUG_GENERATOR_PRIMARY_HH_
 
 #include <memory>
+#include <string>
 
 #include "G4GenericMessenger.hh"
 #include "G4ParticleGun.hh"
@@ -15,6 +16,11 @@ namespace u = CLHEP;
 class MUGGenerator : public G4VUserPrimaryGeneratorAction {
 
   public:
+
+    enum SkyShape {
+      kPlane,
+      kSphere
+    };
 
     MUGGenerator();
     ~MUGGenerator() = default;
@@ -35,6 +41,10 @@ class MUGGenerator : public G4VUserPrimaryGeneratorAction {
 
     std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
     void DefineCommands();
+    void SetSkyShape(std::string shape);
+
+    SkyShape fSkyShape = kSphere;
+    float fSkyPlaneSize = -1;
 
     float fMomentumMin = 0 * u::GeV;
     float fMomentumMax = 1 * u::TeV;

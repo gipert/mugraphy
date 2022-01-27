@@ -13,7 +13,9 @@
 #include "MUGLog.hh"
 #include "MUGManager.hh"
 #include "MUGDetectorConstruction.hh"
+#include "MUGTools.hh"
 
+#include "magic_enum/magic_enum.hpp"
 #include "EcoMug/EcoMug.h"
 
 namespace u = CLHEP;
@@ -38,10 +40,30 @@ void MUGGenerator::BeginOfRunAction() {
   }
 
   MUGLog::Out(MUGLog::debug, "Configuring EcoMug");
-  fEcoMug->SetUseHSphere();
-  fEcoMug->SetHSphereRadius(world_side/2 / u::m); // no units, the user can decide. I use meters
-  // now lay the sphere exactly on the ground
-  fEcoMug->SetHSphereCenterPosition({0, 0, (ground_depth - (sky_height+ground_depth)/2) / u::m});
+
+  switch (fSkyShape) {
+    case SkyShape::kPlane: {
+      fEcoMug->SetUseSky();
+      // put sky exactly on the top of the world
+      fEcoMug->SetSkyCenterPosition({0, 0, (sky_height + ground_depth)/2 / u::m});
+      auto sky_size = fSkyPlaneSize > 0 ? fSkyPlaneSize : world_side;
+      fEcoMug->SetSkySize({sky_size/u::m, sky_size/u::m});
+      break;
+    }
+    case SkyShape::kSphere: {
+      fEcoMug->SetUseHSphere();
+      // now lay the sphere exactly on the ground
+      fEcoMug->SetHSphereCenterPosition({0, 0, (ground_depth - (sky_height+ground_depth)/2) / u::m});
+      fEcoMug->SetHSphereRadius(world_side/2 / u::m); // no units, the user can decide. I use meters
+      break;
+    }
+    default : {
+      MUGLog::OutFormat(MUGLog::fatal, "\"{}\" sky shape not implemented!",
+          magic_enum::enum_name<SkyShape>(fSkyShape));
+      break;
+    }
+  }
+
   fEcoMug->SetMinimumMomentum(fMomentumMin / u::GeV);
   fEcoMug->SetMaximumMomentum(fMomentumMax / u::GeV);
   fEcoMug->SetMinimumTheta(fThetaMin / u::rad);
@@ -49,9 +71,9 @@ void MUGGenerator::BeginOfRunAction() {
   fEcoMug->SetMinimumPhi(fPhiMin / u::rad);
   fEcoMug->SetMaximumPhi(fPhiMax / u::rad);
 
-  // TODO: check if this makes sense
-  MUGLog::OutFormat(MUGLog::debug, "EcoMug random seed: {}", CLHEP::HepRandom::getTheSeed());
-  fEcoMug->SetSeed(CLHEP::HepRandom::getTheSeed());
+  // FIXME: somehow this always sets the same seed
+  // MUGLog::OutFormat(MUGLog::debug, "EcoMug random seed: {}", CLHEP::HepRandom::getTheSeed());
+  // fEcoMug->SetSeed(CLHEP::HepRandom::getTheSeed());
 }
 
 void MUGGenerator::GeneratePrimaries(G4Event* event) {
@@ -86,12 +108,31 @@ void MUGGenerator::GeneratePrimaries(G4Event* event) {
   fGun->GeneratePrimaryVertex(event);
 }
 
+void MUGGenerator::SetSkyShape(std::string shape) {
+  try { fSkyShape = MUGTools::ToEnum<MUGGenerator::SkyShape>(shape, "sky shape"); }
+  catch (const std::bad_cast&) { return; }
+}
+
 void MUGGenerator::DefineCommands() {
 
   // NOTE: SetUnit(Category) is not thread-safe
 
   fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Generator/",
       "Commands for controlling the µ generator");
+
+  fMessenger->DeclareMethod("SkyShape", &MUGGenerator::SetSkyShape)
+    .SetGuidance("Geometrical shape of the µ generation surface")
+    .SetParameterName("shape", false)
+    .SetCandidates(MUGTools::GetCandidates<MUGGenerator::SkyShape>())
+    .SetToBeBroadcasted(true)
+    .SetStates(G4State_PreInit, G4State_Idle);
+
+  fMessenger->DeclarePropertyWithUnit("SkyPlaneSize", "m", fSkyPlaneSize)
+    .SetGuidance("Length of the side of the sky, if it has a planar shape")
+    .SetParameterName("l", false)
+    .SetRange("l > 0")
+    .SetToBeBroadcasted(true)
+    .SetStates(G4State_PreInit, G4State_Idle);
 
   fMessenger->DeclarePropertyWithUnit("MomentumMin", "GeV/c", fMomentumMin)
     .SetGuidance("Minimum momentum of the generated muon")
