@@ -2,8 +2,9 @@
 #define _MUG_MANAGEMENT_RUN_ACTION_HH_
 
 #include <chrono>
+#include <memory>
+#include <string>
 
-#include "globals.hh"
 #include "G4UserRunAction.hh"
 
 class G4Run;
@@ -15,8 +16,8 @@ class MUGRunAction : public G4UserRunAction {
 
   public:
 
-    MUGRunAction(MUGEventAction*);
-    MUGRunAction(MUGEventAction*, MUGGenerator*);
+    MUGRunAction(MUGEventAction*, bool persistency=false);
+    MUGRunAction(MUGEventAction*, MUGGenerator*, bool persistency = false);
     ~MUGRunAction();
 
     MUGRunAction           (MUGRunAction const&) = delete;
@@ -37,7 +38,7 @@ class MUGRunAction : public G4UserRunAction {
     MUGRun* fMUGRun = nullptr;
     MUGEventAction* fEventAction = nullptr;
     MUGGenerator* fMUGGenerator = nullptr;
-    std::string fOutputFile = "detector-hits.hdf5";
+    bool fIsPersistencyEnabled = false;
 };
 
 #endif

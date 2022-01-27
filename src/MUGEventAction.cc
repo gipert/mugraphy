@@ -46,12 +46,14 @@ void MUGEventAction::BeginOfEventAction(const G4Event* event) {
         elapsed_d, elapsed_h, elapsed_m, elapsed_s);
   }
 
-  fEdep.clear();
-  fXHit.clear();
-  fYHit.clear();
-  fZHit.clear();
-  fTheta.clear();
-  fPhi.clear();
+  if (MUGManager::GetMUGManager()->IsPersistencyEnabled()) {
+    fEdep.clear();
+    fXHit.clear();
+    fYHit.clear();
+    fZHit.clear();
+    fTheta.clear();
+    fPhi.clear();
+  }
 }
 
 void MUGEventAction::EndOfEventAction(const G4Event* event) {
@@ -72,25 +74,23 @@ void MUGEventAction::EndOfEventAction(const G4Event* event) {
 
   if (hit_coll->entries() <= 0) return;
 
-  auto ana_man = G4AnalysisManager::Instance();
+  if (MUGManager::GetMUGManager()->IsPersistencyEnabled()) {
+    auto ana_man = G4AnalysisManager::Instance();
 
-  for (auto hit : *hit_coll->GetVector()) {
-    if (!hit) continue;
-    fEdep.push_back(hit->GetEdep() / G4Analysis::GetUnitValue("MeV"));
-    fXHit.push_back(hit->GetHitPos().getX() / G4Analysis::GetUnitValue("m"));
-    fYHit.push_back(hit->GetHitPos().getY() / G4Analysis::GetUnitValue("m"));
-    fZHit.push_back(hit->GetHitPos().getZ() / G4Analysis::GetUnitValue("m"));
-    fTheta.push_back(hit->GetMomDir().getTheta() / G4Analysis::GetUnitValue("deg"));
-    fPhi.push_back(hit->GetMomDir().getPhi() / G4Analysis::GetUnitValue("deg"));
+    for (auto hit : *hit_coll->GetVector()) {
+      if (!hit) continue;
+      fEdep.push_back(hit->GetEdep() / G4Analysis::GetUnitValue("MeV"));
+      fXHit.push_back(hit->GetHitPos().getX() / G4Analysis::GetUnitValue("m"));
+      fYHit.push_back(hit->GetHitPos().getY() / G4Analysis::GetUnitValue("m"));
+      fZHit.push_back(hit->GetHitPos().getZ() / G4Analysis::GetUnitValue("m"));
+      fTheta.push_back(hit->GetMomDir().getTheta() / G4Analysis::GetUnitValue("deg"));
+      fPhi.push_back(hit->GetMomDir().getPhi() / G4Analysis::GetUnitValue("deg"));
+    }
+
+    ana_man->AddNtupleRow();
   }
-
-  ana_man->AddNtupleRow();
 }
 
-void MUGEventAction::DefineCommands() {
-
-  fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Output/",
-      "Commands for controlling the event actions");
-}
+void MUGEventAction::DefineCommands() {}
 
 // vim: tabstop=2 shiftwidth=2 expandtab

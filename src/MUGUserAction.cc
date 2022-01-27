@@ -1,5 +1,6 @@
 #include "MUGUserAction.hh"
 
+#include "MUGManager.hh"
 #include "MUGGenerator.hh"
 #include "MUGRunAction.hh"
 #include "MUGEventAction.hh"
@@ -11,7 +12,8 @@ void MUGUserAction::BuildForMaster() const {
 
   auto event_action = new MUGEventAction();
   // the master thread does not simulate anything, no primary generator is needed
-  this->SetUserAction(new MUGRunAction(event_action));
+  this->SetUserAction(new MUGRunAction(event_action,
+        MUGManager::GetMUGManager()->IsPersistencyEnabled()));
 }
 
 void MUGUserAction::Build() const {
@@ -19,7 +21,8 @@ void MUGUserAction::Build() const {
   auto generator_primary = new MUGGenerator();
   auto event_action = new MUGEventAction();
   this->SetUserAction(generator_primary);
-  this->SetUserAction(new MUGRunAction(event_action, generator_primary));
+  this->SetUserAction(new MUGRunAction(event_action, generator_primary,
+        MUGManager::GetMUGManager()->IsPersistencyEnabled()));
   this->SetUserAction(event_action);
   this->SetUserAction(new MUGStackingAction(event_action));
   this->SetUserAction(new MUGSteppingAction(event_action));

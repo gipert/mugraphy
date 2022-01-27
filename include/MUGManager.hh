@@ -37,16 +37,18 @@ class MUGManager {
     G4VUserPhysicsList* GetProcessesList();
     inline int GetPrintModulo() { return fPrintModulo; }
 
-    inline static bool IsExecSequential() {
-      return MUGManager::GetMUGManager()->GetG4RunManager()->GetRunManagerType()
-        == G4RunManager::RMType::sequentialRM;
+    inline bool IsExecSequential() {
+      return fG4RunManager->GetRunManagerType() == G4RunManager::RMType::sequentialRM;
     }
+    inline bool IsPersistencyEnabled() { return fIsPersistencyEnabled; }
+    inline const std::string& GetOutputFileName() { return fOutputFile; }
 
     // setters
     inline void SetNThreads(int n_thr) { fNThreads = n_thr; }
     inline void SetBatchMode(bool flag=true) { fBatchMode = flag; }
     inline void SetPrintModulo(int n_ev) { fPrintModulo = n_ev > 0 ? n_ev : -1; }
 
+    inline void EnablePersistency(bool flag=true) { fIsPersistencyEnabled = flag; }
     inline void IncludeMacroFile(std::string filename) { fMacroFileNames.emplace_back(filename); }
     void Initialize();
     void Run();
@@ -65,10 +67,12 @@ class MUGManager {
 
     int fArgc; char** fArgv;
     std::vector<std::string> fMacroFileNames;
-    bool fIsRandControlled;
-    bool fBatchMode;
-    int fPrintModulo;
-    int fNThreads;
+    bool fIsRandControlled = false;
+    bool fBatchMode = false;
+    bool fIsPersistencyEnabled = true;
+    int fPrintModulo = -1;
+    int fNThreads = 0;
+    std::string fOutputFile = "detector-hits.root";
 
     static MUGManager* fMUGManager;
 
@@ -83,6 +87,7 @@ class MUGManager {
     std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
     std::unique_ptr<G4GenericMessenger> fLogMessenger = nullptr;
     std::unique_ptr<G4GenericMessenger> fRandMessenger = nullptr;
+    std::unique_ptr<G4GenericMessenger> fOutputMessenger = nullptr;
     void DefineCommands();
 };
 

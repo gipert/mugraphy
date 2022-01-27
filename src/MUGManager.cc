@@ -33,11 +33,7 @@ MUGManager* MUGManager::fMUGManager = nullptr;
 
 MUGManager::MUGManager(int argc, char** argv) :
   fArgc(argc),
-  fArgv(argv),
-  fIsRandControlled(false),
-  fBatchMode(false),
-  fPrintModulo(-1),
-  fNThreads(0) {
+  fArgv(argv) {
 
   if (fMUGManager) MUGLog::Out(MUGLog::fatal, "MUGManager must be singleton!");
   fMUGManager = this;
@@ -112,6 +108,11 @@ void MUGManager::Initialize() {
 }
 
 void MUGManager::Run() {
+
+  // TODO: add in remage
+  if (fBatchMode and fMacroFileNames.empty()) {
+    MUGLog::Out(MUGLog::fatal, "Batch mode has been requested but no macro file has been set");
+  }
 
   auto session = std::make_unique<G4UIExecutive>(fArgc, fArgv);
   session->SetPrompt(MUGLog::Colorize<MUGLog::Ansi::unspecified>("mugraphy> ", G4cout, true));
@@ -223,7 +224,7 @@ void MUGManager::DefineCommands() {
   fMessenger->DeclareMethod("PrintProgressModulo", &MUGManager::SetPrintModulo)
     .SetGuidance("How many processed events before progress information is displayed")
     .SetParameterName("n", false)
-    // .SetRange("n > 0")
+    .SetRange("n > 0")
     .SetStates(G4State_PreInit, G4State_Idle);
 
   fLogMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Manager/Logging/",
@@ -257,18 +258,26 @@ void MUGManager::DefineCommands() {
   fRandMessenger->DeclareMethod("Seed", &MUGManager::SetRandEngineSeed)
     .SetGuidance("Select the initial seed for randomization (CLHEP::HepRandom::setTheSeed)")
     .SetParameterName("n", false)
-    // .SetRange("n >= 0")
+    .SetRange("n >= 0")
     .SetDefaultValue("1")
     .SetStates(G4State_PreInit, G4State_Idle);
 
   fRandMessenger->DeclareMethod("InternalSeed", &MUGManager::SetRandEngineInternalSeed)
     .SetGuidance("Select the initial seed for randomization by using the internal CLHEP table")
     .SetParameterName("index", false)
-    // .SetRange("index >= 0 && index < 430")
+    .SetRange("index >= 0 && index < 430")
     .SetStates(G4State_PreInit, G4State_Idle);
 
   fRandMessenger->DeclareMethod("UseSystemEntropy", &MUGManager::SetRandSystemEntropySeed)
     .SetGuidance("Select a random initial seed from system entropy")
+    .SetStates(G4State_PreInit, G4State_Idle);
+
+  fOutputMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Output/",
+      "Commands for controlling the simulation output");
+
+  fOutputMessenger->DeclareProperty("FileName", fOutputFile)
+    .SetGuidance("Set output file name for object persistency")
+    .SetParameterName("filename", false)
     .SetStates(G4State_PreInit, G4State_Idle);
 }
 

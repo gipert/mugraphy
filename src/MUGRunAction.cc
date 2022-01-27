@@ -22,32 +22,37 @@ G4Run* MUGRunAction::GenerateRun() {
   return fMUGRun;
 }
 
-MUGRunAction::MUGRunAction(MUGEventAction* ev_action) :
-  fEventAction(ev_action) {
+MUGRunAction::MUGRunAction(MUGEventAction* ev_action, bool persistency) :
+  fEventAction(ev_action),
+  fIsPersistencyEnabled(persistency) {
 
   this->DefineCommands();
-  this->SetupAnalysisManager();
+  if (fIsPersistencyEnabled) { this->SetupAnalysisManager(); }
 }
 
-MUGRunAction::MUGRunAction(MUGEventAction* ev_action, MUGGenerator* gene) :
+MUGRunAction::MUGRunAction(MUGEventAction* ev_action, MUGGenerator* gene, bool persistency) :
   fEventAction(ev_action),
-  fMUGGenerator(gene) {
+  fMUGGenerator(gene),
+  fIsPersistencyEnabled(persistency) {
 
   this->DefineCommands();
-  this->SetupAnalysisManager();
+  if (fIsPersistencyEnabled) { this->SetupAnalysisManager(); }
 }
 
 MUGRunAction::~MUGRunAction() {
+  // TODO: what about this?
   // G4AnalysisManager::Instance()->Clear();
 }
 
 void MUGRunAction::SetupAnalysisManager() {
 
+  MUGLog::Out(MUGLog::debug, "Setting up analysis manager");
+
   auto ana_man = G4AnalysisManager::Instance();
   if (MUGLog::GetLogLevelScreen() <= MUGLog::debug) ana_man->SetVerboseLevel(1);
   else ana_man->SetVerboseLevel(0);
 
-  if (!MUGManager::IsExecSequential()) ana_man->SetNtupleMerging(true);
+  if (!MUGManager::GetMUGManager()->IsExecSequential()) ana_man->SetNtupleMerging(true);
 
   // create tuples
   ana_man->CreateNtuple("ntuples", "Event information");
@@ -64,10 +69,15 @@ void MUGRunAction::BeginOfRunAction(const G4Run*) {
 
   MUGLog::OutDev(MUGLog::debug, "Start of run action");
 
-  auto ana_man = G4AnalysisManager::Instance();
-  if (fOutputFile.empty()) MUGLog::Out(MUGLog::fatal, "Please set an output file name");
-  MUGLog::Out(MUGLog::summary, "Opening output file: ", fOutputFile); // TODO: realpath
-  ana_man->OpenFile(fOutputFile);
+  auto manager = MUGManager::GetMUGManager();
+
+  if (fIsPersistencyEnabled) {
+    auto ana_man = G4AnalysisManager::Instance();
+    // TODO: realpath
+    if (this->IsMaster()) MUGLog::Out(MUGLog::summary, "Opening output file: ",
+        manager->GetOutputFileName());
+    ana_man->OpenFile(manager->GetOutputFileName());
+  }
 
   if (fMUGGenerator) { fMUGGenerator->BeginOfRunAction(); }
 
@@ -85,7 +95,6 @@ void MUGRunAction::BeginOfRunAction(const G4Run*) {
         fMUGRun->GetNumberOfEventToBeProcessed());
   }
 
-  auto manager = MUGManager::GetMUGManager();
   auto g4manager = G4RunManager::GetRunManager();
   auto tot_events = g4manager->GetNumberOfEventsToBeProcessed();
   if (manager->GetPrintModulo() <= 0 and tot_events >= 100) manager->SetPrintModulo(tot_events/10);
@@ -98,9 +107,11 @@ void MUGRunAction::EndOfRunAction(const G4Run*) {
 
   if (fMUGGenerator) fMUGGenerator->EndOfRunAction();
 
-  auto ana_man = G4AnalysisManager::Instance();
-  ana_man->Write();
-  ana_man->CloseFile();
+  if (fIsPersistencyEnabled) {
+    auto ana_man = G4AnalysisManager::Instance();
+    ana_man->Write();
+    ana_man->CloseFile();
+  }
 
   if (this->IsMaster()) {
     auto time_now = std::chrono::system_clock::now();
@@ -129,16 +140,6 @@ void MUGRunAction::EndOfRunAction(const G4Run*) {
   }
 }
 
-void MUGRunAction::DefineCommands() {
+void MUGRunAction::DefineCommands() {}
 
-  fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Output/",
-      "Commands for controlling the simulation output");
-
-  fMessenger->DeclareProperty("FileName", fOutputFile)
-    .SetGuidance("")
-    .SetParameterName("filename", false)
-    .SetToBeBroadcasted(true)
-    .SetStates(G4State_PreInit, G4State_Idle);
-
-}
 // vim: tabstop=2 shiftwidth=2 expandtab

@@ -1,7 +1,8 @@
 # /tracking/verbose 1
 
-# /MUG/Manager/Logging/LogLevelScreen debug
-/MUG/Geometry/IncludeGDMLFile /home/gipert/sw/src/mugraphy/src/geom/geometry.gdml
+/MUG/Manager/Logging/LogLevelScreen summary
+/MUG/Geometry/IncludeGDMLFile /home/gipert/sw/src/mugraphy/src/geom/geometry-simple.gdml
+/MUG/Output/FileName detector-hits.hdf5
 
 /run/initialize
 
@@ -20,9 +21,11 @@
 /vis/scene/add/hits
 /vis/scene/endOfEventAction accumulate
 
-/MUG/Generator/ThetaMax 20 deg
+/MUG/Generator/SkyShape Plane
+/MUG/Generator/SkyPlaneSize 10 m
+/MUG/Generator/ThetaMax 1 deg
 /MUG/Generator/MomentumMin 20 GeV/c
 
-/run/beamOn 10
+/run/beamOn 1000
 
 /vis/viewer/flush
