@@ -103,7 +103,8 @@ void MUGGenerator::GeneratePrimaries(G4Event* event) {
 
   const auto& p_tot = fEcoMug->GetGenerationMomentum() * u::GeV;
   MUGLog::OutFormat(MUGLog::debug, "...momentum {:.4g} GeV/c", p_tot/u::GeV);
-  fGun->SetParticleEnergy(p_tot*p_tot/2/G4MuonPlus::Definition()->GetPDGMass());
+  const auto& mu_mass = G4MuonPlus::Definition()->GetPDGMass();
+  fGun->SetParticleEnergy(std::sqrt(p_tot*p_tot + mu_mass*mu_mass) - mu_mass);
 
   fGun->GeneratePrimaryVertex(event);
 }
