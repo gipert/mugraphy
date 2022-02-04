@@ -8,7 +8,9 @@ namespace fs = std::filesystem;
 #include "G4VPhysicalVolume.hh"
 #include "G4PhysicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
+#include "G4LogicalVolumeStore.hh"
 #include "G4PVPlacement.hh"
+#include "G4Region.hh"
 #include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
 #include "G4Transform3D.hh"
@@ -87,6 +89,11 @@ G4VPhysicalVolume* MUGDetectorConstruction::Construct() {
   auto att = new G4VisAttributes(G4Colour::Cyan());
   att->SetForceWireframe(true);
   if (fWorld) fWorld->GetLogicalVolume()->SetVisAttributes(att);
+
+  // create sensitive region for special production cuts
+  auto det_lv = MUGNavigationTools::FindLogicalVolume("Detector");
+  det_lv->SetRegion(fSensitiveRegion);
+  fSensitiveRegion->AddRootLogicalVolume(det_lv);
 
   return fWorld;
 }

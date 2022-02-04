@@ -69,26 +69,33 @@ void MUGProcessesList::SetCuts() {
 
   MUGLog::Out(MUGLog::debug, "Setting particle cut values");
 
+  // default production thresholds for the world volume
+  this->SetCutsWithDefault();
+
   G4HadronicProcessStore::Instance()->SetVerbose(G4VModularPhysicsList::verboseLevel);
 
-  G4VUserPhysicsList::defaultCutValue = 1*u::mm;
+  G4VUserPhysicsList::defaultCutValue = 1*u::m;
 
   this->SetCutValue(0, "proton");
   this->SetCutValue(1*u::m, "mu-");
   this->SetCutValue(1*u::m, "mu+");
 
+  auto region_name = "SensitiveRegion";
+
   if (G4RegionStore::GetInstance()) {
     if (G4RegionStore::GetInstance()->size() > 1) {
       // Set different cuts for the sensitive region
-      auto region = G4RegionStore::GetInstance()->GetRegion("SensitiveRegion", false);
+      auto region = G4RegionStore::GetInstance()->GetRegion(region_name, false);
       if (region) {
-        MUGLog::Out(MUGLog::detail, "Register cuts for SensitiveRegion ");
+        MUGLog::OutFormat(MUGLog::debug, "Registering production cuts for region '{}'", region_name);
         auto cuts = region->GetProductionCuts();
         if (!cuts) cuts = new G4ProductionCuts;
         cuts->SetProductionCut(1*u::mm, "mu-");
         cuts->SetProductionCut(1*u::mm, "mu+");
         region->SetProductionCuts(cuts);
       }
+      else MUGLog::OutFormat(MUGLog::warning, "Could not find region '{}' for production cuts settings",
+          region_name);
     }
   }
 }

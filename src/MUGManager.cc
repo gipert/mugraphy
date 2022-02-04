@@ -74,13 +74,13 @@ void MUGManager::Initialize() {
   // restore buffer
   std::cout.rdbuf(orig_buf);
 
-  MUGLog::Out(MUGLog::debug, "Initializing default processes list");
-  fProcessesList = new MUGProcessesList();
-  fG4RunManager->SetUserInitialization(fProcessesList);
-
   MUGLog::Out(MUGLog::debug, "Initializing default (empty) detector");
   fDetectorConstruction = new MUGDetectorConstruction();
   fG4RunManager->SetUserInitialization(fDetectorConstruction);
+
+  MUGLog::Out(MUGLog::debug, "Initializing default processes list");
+  fProcessesList = new MUGProcessesList();
+  fG4RunManager->SetUserInitialization(fProcessesList);
 
   MUGLog::Out(MUGLog::debug, "Initializing default visualization manager");
   fG4VisManager = std::make_unique<G4VisExecutive>("quiet");

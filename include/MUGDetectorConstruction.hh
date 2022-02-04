@@ -7,6 +7,7 @@
 
 #include "globals.hh"
 #include "G4VUserDetectorConstruction.hh"
+#include "G4Region.hh"
 #include "G4Cache.hh"
 
 #include "MUGMaterialTable.hh"
@@ -47,6 +48,7 @@ class MUGDetectorConstruction : public G4VUserDetectorConstruction {
     void DefineCommands();
 
     G4VPhysicalVolume* fWorld = nullptr;
+    G4Region* fSensitiveRegion = new G4Region("SensitiveRegion");
 };
 
 #endif

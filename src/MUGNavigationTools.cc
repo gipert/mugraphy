@@ -14,10 +14,20 @@
 #include "fmt/core.h"
 
 G4VPhysicalVolume* MUGNavigationTools::FindVolumeByName(std::string name) {
-    auto& store = *G4PhysicalVolumeStore::GetInstance();
+    auto const& store = *G4PhysicalVolumeStore::GetInstance();
     auto result = std::find_if(store.begin(), store.end(), [&name](auto v) { return std::string(v->GetName()) == name; });
     if (result == store.end()) {
-      MUGLog::Out(MUGLog::error, "Volume ", name, " not found in volume store. Returning nullptr");
+      MUGLog::Out(MUGLog::error, "Physical volume ", name, " not found in store. Returning nullptr");
+      return nullptr;
+    }
+    return *result;
+}
+
+G4LogicalVolume* MUGNavigationTools::FindLogicalVolume(std::string name) {
+    auto const& store = *G4LogicalVolumeStore::GetInstance();
+    auto result = std::find_if(store.begin(), store.end(), [&name](auto v) { return std::string(v->GetName()) == name; });
+    if (result == store.end()) {
+      MUGLog::Out(MUGLog::error, "Logical volume ", name, " not found in store. Returning nullptr");
       return nullptr;
     }
     return *result;
