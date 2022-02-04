@@ -80,6 +80,9 @@ void MUGRunAction::BeginOfRunAction(const G4Run*) {
         manager->GetOutputFileName());
     ana_man->OpenFile(manager->GetOutputFileName());
   }
+  else {
+    MUGLog::Out(MUGLog::warning, "Object persistency disabled");
+  }
 
   if (fMUGGenerator) { fMUGGenerator->BeginOfRunAction(); }
 

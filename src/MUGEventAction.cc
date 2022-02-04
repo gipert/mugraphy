@@ -91,7 +91,7 @@ void MUGEventAction::EndOfEventAction(const G4Event* event) {
       fXHit.push_back(hit->GetHitPos().getX() / G4Analysis::GetUnitValue("m"));
       fYHit.push_back(hit->GetHitPos().getY() / G4Analysis::GetUnitValue("m"));
       fZHit.push_back(hit->GetHitPos().getZ() / G4Analysis::GetUnitValue("m"));
-      fTheta.push_back(hit->GetMomDir().getTheta() / G4Analysis::GetUnitValue("deg"));
+      fTheta.push_back((CLHEP::pi - hit->GetMomDir().getTheta()) / G4Analysis::GetUnitValue("deg"));
       fPhi.push_back(hit->GetMomDir().getPhi() / G4Analysis::GetUnitValue("deg"));
     }
 
