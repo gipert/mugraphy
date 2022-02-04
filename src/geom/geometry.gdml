@@ -4500,7 +4500,7 @@
 				<volumeref ref="Detector"/>
 				<position name="LowerPanel_pos" x="0.000000000000000" y="-22.000000000000000" z="18.000000000000000" unit="m"/>
 			</physvol>
-			<physvol name="UpperPanel">
+			<physvol name="UpperPanel" copynumber="1">
 				<volumeref ref="Detector"/>
 				<position name="UpperPanel_pos" x="0.000000000000000" y="-22.000000000000000" z="19.000000000000000" unit="m"/>
 			</physvol>

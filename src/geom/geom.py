@@ -51,11 +51,11 @@ det_l = geant4.LogicalVolume(det_s, 'G4_PHOTO_EMULSION', 'Detector', reg)
 
 queen_cham_floor = [0, -22, 18, 'm']
 geant4.PhysicalVolume([0, 0, 0], queen_cham_floor, det_l,
-        'LowerPanel', cavities_l, reg)
+        'LowerPanel', cavities_l, reg, copyNumber=0)
 
 queen_cham_floor[2] += 1
 geant4.PhysicalVolume([0, 0, 0], queen_cham_floor, det_l,
-        'UpperPanel', cavities_l, reg)
+        'UpperPanel', cavities_l, reg, copyNumber=1)
 
 print("INFO: exporting to geometry.gdml")
 w = gdml.Writer()
