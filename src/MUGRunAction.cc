@@ -49,10 +49,12 @@ void MUGRunAction::SetupAnalysisManager() {
   MUGLog::Out(MUGLog::debug, "Setting up analysis manager");
 
   auto ana_man = G4AnalysisManager::Instance();
-  if (MUGLog::GetLogLevelScreen() <= MUGLog::debug) ana_man->SetVerboseLevel(1);
+  if (MUGLog::GetLogLevelScreen() <= MUGLog::debug) ana_man->SetVerboseLevel(10);
   else ana_man->SetVerboseLevel(0);
 
   if (!MUGManager::GetMUGManager()->IsExecSequential()) ana_man->SetNtupleMerging(true);
+
+  if (!fEventAction) MUGLog::Out(MUGLog::fatal, "Event action pointer stored by MUGRunAction is null");
 
   // create tuples
   ana_man->CreateNtuple("ntuples", "Event information");

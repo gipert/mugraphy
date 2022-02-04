@@ -29,7 +29,7 @@ void MUGEventAction::BeginOfEventAction(const G4Event* event) {
     auto current_run = dynamic_cast<const MUGRun*>(G4RunManager::GetRunManager()->GetCurrentRun());
     auto tot_events = current_run->GetNumberOfEventToBeProcessed();
 
-    // FIXME: elapsed time computation is broken
+    // FIXME: elapsed time computation is broken in parallel mode
 
     auto start_time = current_run->GetStartTime();
     auto time_now = std::chrono::system_clock::now();
@@ -72,13 +72,21 @@ void MUGEventAction::EndOfEventAction(const G4Event* event) {
     return;
   }
 
-  if (hit_coll->entries() <= 0) return;
+  if (hit_coll->entries() <= 0) {
+    MUGLog::Out(MUGLog::debug, "Hit collection is empty at the end of event");
+    return;
+  }
+  else MUGLog::Out(MUGLog::debug, "Hit collection contains ", hit_coll->entries(),
+      " panel hits at the end of the event");
 
   if (MUGManager::GetMUGManager()->IsPersistencyEnabled()) {
+    MUGLog::Out(MUGLog::debug, "Filling data vectors for objects persistency");
+
     auto ana_man = G4AnalysisManager::Instance();
 
     for (auto hit : *hit_coll->GetVector()) {
       if (!hit) continue;
+      hit->Print();
       fEdep.push_back(hit->GetEdep() / G4Analysis::GetUnitValue("MeV"));
       fXHit.push_back(hit->GetHitPos().getX() / G4Analysis::GetUnitValue("m"));
       fYHit.push_back(hit->GetHitPos().getY() / G4Analysis::GetUnitValue("m"));
