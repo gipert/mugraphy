@@ -2,19 +2,11 @@
 # /MUG/Manager/Randomization/Seed 2
 
 /MUG/Geometry/IncludeGDMLFile /home/gipert/sw/src/mugraphy/src/geom/geometry-simple.gdml
-/MUG/Output/FileName detector-hits.hdf5
+/MUG/Output/FileName detector-hits.root
 
 /run/initialize
 
-/MUG/Generator/SkyShape Plane
-/MUG/Generator/SkyPlaneSize 10 m
-/MUG/Generator/ThetaMax 1 deg
+/MUG/Generator/ThetaMax 70 deg
 /MUG/Generator/MomentumMin 20 GeV/c
-
-# /MUG/Stacking/KillSecondaries false
-# /MUG/Stacking/KillSecondaries true
-
-# /MUG/Geometry/PrintListOfLogicalVolumes
-# /MUG/Geometry/PrintListOfPhysicalVolumes
 
 /run/beamOn 1000
