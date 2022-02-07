@@ -13,7 +13,7 @@
 
 #include "fmt/core.h"
 
-G4VPhysicalVolume* MUGNavigationTools::FindVolumeByName(std::string name) {
+G4VPhysicalVolume* MUGNavigationTools::FindPhysicalVolume(std::string name) {
     auto const& store = *G4PhysicalVolumeStore::GetInstance();
     auto result = std::find_if(store.begin(), store.end(), [&name](auto v) { return std::string(v->GetName()) == name; });
     if (result == store.end()) {
