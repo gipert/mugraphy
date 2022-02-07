@@ -77,7 +77,7 @@ G4VPhysicalVolume* MUGDetectorConstruction::Construct() {
 
   for (const auto& el : fPhysVolStepLimits) {
     MUGLog::OutFormat(MUGLog::debug, "Setting max user step size for volume '{}' to {}", el.first, el.second);
-    auto vol = MUGNavigationTools::FindVolumeByName(el.first);
+    auto vol = MUGNavigationTools::FindPhysicalVolume(el.first);
     if (!vol) {
       MUGLog::Out(MUGLog::error, "Returned volume is null, skipping user step limit setting");
     }

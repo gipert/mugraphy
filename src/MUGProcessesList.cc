@@ -65,6 +65,7 @@ MUGProcessesList::MUGProcessesList() :
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+// TODO: set meaningful values here
 void MUGProcessesList::SetCuts() {
 
   MUGLog::Out(MUGLog::debug, "Setting particle cut values");

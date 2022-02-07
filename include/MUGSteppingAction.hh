@@ -1,10 +1,15 @@
 #ifndef _MUG_MANAGEMENT_STEPPING_ACTION_HH_
 #define _MUG_MANAGEMENT_STEPPING_ACTION_HH_
 
+#include <memory>
+#include <limits>
+
 #include "G4UserSteppingAction.hh"
+#include "CLHEP/Units/SystemOfUnits.h"
 
 class G4Step;
 class MUGEventAction;
+class G4GenericMessenger;
 class MUGSteppingAction : public G4UserSteppingAction {
 
   public:
@@ -21,7 +26,11 @@ class MUGSteppingAction : public G4UserSteppingAction {
 
   private:
 
+    std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
+    void DefineCommands();
+
     MUGEventAction* fEventAction = nullptr;
+    float fLowestAltitudeForTracking = std::numeric_limits<float>::lowest() * CLHEP::m;
 };
 
 #endif
