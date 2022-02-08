@@ -24,6 +24,7 @@ class MUGEventAction : public G4UserEventAction {
     void EndOfEventAction(const G4Event*) override;
 
     // getters
+    inline std::vector<int>& GetPanelNrVec() { return fPanelNr; }
     inline std::vector<float>& GetEdepVec()  { return fEdep; }
     inline std::vector<float>& GetXHitVec()  { return fXHit; }
     inline std::vector<float>& GetYHitVec()  { return fYHit; }
@@ -39,6 +40,7 @@ class MUGEventAction : public G4UserEventAction {
     int fHitCollID = -1;
 
     // per sub-detector
+    std::vector<int>   fPanelNr;
     std::vector<float> fEdep;
     std::vector<float> fXHit;
     std::vector<float> fYHit;

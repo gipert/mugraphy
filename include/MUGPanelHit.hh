@@ -27,12 +27,13 @@ class MUGPanelHit : public G4VHit {
 
     inline bool IsInitialized() { return fIsInitialized; }
 
-    void Add(double edep, const G4ThreeVector& pos, const G4ThreeVector& dir);
+    void Add(int panel_nr, double edep, const G4ThreeVector& pos, const G4ThreeVector& dir);
 
     // getters
     inline const G4ThreeVector& GetHitPos() { return fHitPos; }
     inline const G4ThreeVector& GetMomDir() { return fMomDir; }
-    inline double GetEdep() { return fEdep; }
+    inline float GetEdep() { return fEdep; }
+    inline int GetPanelNr() { return fPanelNr; }
 
     // TODO: override Draw
     void Print() override;
@@ -40,7 +41,8 @@ class MUGPanelHit : public G4VHit {
   private:
 
     bool fIsInitialized = false;
-    double fEdep = 0;
+    int fPanelNr = -1;
+    float fEdep = 0;
     G4ThreeVector fHitPos;
     G4ThreeVector fMomDir;
 };

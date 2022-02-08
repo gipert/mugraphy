@@ -58,6 +58,7 @@ void MUGRunAction::SetupAnalysisManager() {
 
   // create tuples
   ana_man->CreateNtuple("ntuples", "Event information");
+  ana_man->CreateNtupleIColumn("panel",  fEventAction->GetPanelNrVec());
   ana_man->CreateNtupleFColumn("energy", fEventAction->GetEdepVec());
   ana_man->CreateNtupleFColumn("xhit",   fEventAction->GetXHitVec());
   ana_man->CreateNtupleFColumn("yhit",   fEventAction->GetYHitVec());

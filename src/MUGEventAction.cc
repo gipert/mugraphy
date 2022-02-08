@@ -47,6 +47,7 @@ void MUGEventAction::BeginOfEventAction(const G4Event* event) {
   }
 
   if (MUGManager::GetMUGManager()->IsPersistencyEnabled()) {
+    fPanelNr.clear();
     fEdep.clear();
     fXHit.clear();
     fYHit.clear();
@@ -87,6 +88,7 @@ void MUGEventAction::EndOfEventAction(const G4Event* event) {
     for (auto hit : *hit_coll->GetVector()) {
       if (!hit) continue;
       hit->Print();
+      fPanelNr.push_back(hit->GetPanelNr());
       fEdep.push_back(hit->GetEdep() / G4Analysis::GetUnitValue("MeV"));
       fXHit.push_back(hit->GetHitPos().getX() / G4Analysis::GetUnitValue("m"));
       fYHit.push_back(hit->GetHitPos().getY() / G4Analysis::GetUnitValue("m"));

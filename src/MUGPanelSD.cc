@@ -39,22 +39,23 @@ bool MUGPanelSD::ProcessHits(G4Step* step, G4TouchableHistory* /*history*/) {
 
   MUGLog::Out(MUGLog::debug, "Hit in detector panel nr. ", panel_nr, " detected");
 
-  // do we need to allocate space?
-  if (panel_nr >= fHitsCollection->entries()) {
-    MUGLog::Out(MUGLog::debug, "Hit container has size = ", fHitsCollection->entries(),
-        ", padding with hit object until index = ", panel_nr);
-    const auto n_missing = panel_nr - fHitsCollection->entries();
-    for (size_t _ = 0; _ <= n_missing; _++) {
-      fHitsCollection->insert(new MUGPanelHit());
-    }
-  }
+  MUGPanelHit* hit = nullptr;
 
-  // get object
-  auto hit = (*fHitsCollection)[panel_nr];
+  const auto& hit_vec = fHitsCollection->GetVector();
+  const auto& result = std::find_if(hit_vec->begin(), hit_vec->end(),
+      [&panel_nr](MUGPanelHit* h){ return h->GetPanelNr() == (int)panel_nr; });
+
+  if (result == hit_vec->end()) {
+    MUGLog::Out(MUGLog::debug, "No hit object found, initializing");
+    hit = new MUGPanelHit();
+    fHitsCollection->insert(hit);
+  }
+  else hit = *result;
 
   // integrate hit info
   MUGLog::Out(MUGLog::debug, "Adding hit data to panel hit container");
   hit->Add(
+    panel_nr,
     step->GetTotalEnergyDeposit(),
     step->GetPreStepPoint()->GetPosition(),
     step->GetTrack()->GetMomentumDirection()
