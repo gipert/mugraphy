@@ -65,27 +65,19 @@ MUGProcessesList::MUGProcessesList() :
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO: set meaningful values here
+// TODO: revise
 void MUGProcessesList::SetCuts() {
 
   MUGLog::Out(MUGLog::debug, "Setting particle cut values");
 
   // default production thresholds for the world volume
-  this->SetCutsWithDefault();
+  this->SetDefaultCutValue(0.1*u::m);
 
-  G4HadronicProcessStore::Instance()->SetVerbose(G4VModularPhysicsList::verboseLevel);
-
-  G4VUserPhysicsList::defaultCutValue = 1*u::m;
-
-  this->SetCutValue(0, "proton");
-  this->SetCutValue(1*u::m, "mu-");
-  this->SetCutValue(1*u::m, "mu+");
-
+  // Set different cuts for the sensitive region
   auto region_name = "SensitiveRegion";
 
   if (G4RegionStore::GetInstance()) {
     if (G4RegionStore::GetInstance()->size() > 1) {
-      // Set different cuts for the sensitive region
       auto region = G4RegionStore::GetInstance()->GetRegion(region_name, false);
       if (region) {
         MUGLog::OutFormat(MUGLog::debug, "Registering production cuts for region '{}'", region_name);
