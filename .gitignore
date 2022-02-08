@@ -4,6 +4,7 @@
 build
 .local
 *.step
+*.root
 
 compile_commands.json
 

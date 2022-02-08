@@ -6,7 +6,8 @@
 
 /run/initialize
 
+/MUG/Stepping/KillTrackBelowAltitude -45 m # offset of 60 needed here
 /MUG/Generator/ThetaMax 70 deg
 /MUG/Generator/MomentumMin 20 GeV/c
 
-/run/beamOn 1000
+/run/beamOn 1000000
