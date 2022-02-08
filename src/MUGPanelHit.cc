@@ -1,6 +1,5 @@
 #include "MUGPanelHit.hh"
 
-#include "G4GenericMessenger.hh"
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "G4UnitsTable.hh"
 
@@ -9,10 +8,6 @@
 namespace u = CLHEP;
 
 G4ThreadLocal G4Allocator<MUGPanelHit>* MUGPanelHitAllocator = nullptr;
-
-MUGPanelHit::MUGPanelHit() {
-  this->DefineCommands();
-}
 
 G4bool MUGPanelHit::operator==(const MUGPanelHit& right) const {
   return ( this == &right ) ? true : false;
@@ -33,12 +28,6 @@ void MUGPanelHit::Add(double edep, const G4ThreeVector& pos, const G4ThreeVector
     fMomDir = dir;
     fIsInitialized = true;
   }
-}
-
-void MUGPanelHit::DefineCommands() {
-
-  fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Hit/",
-      "Commands for controlling stuff");
 }
 
 // vim: tabstop=2 shiftwidth=2 expandtab

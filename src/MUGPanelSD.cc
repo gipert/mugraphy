@@ -35,7 +35,7 @@ void MUGPanelSD::Initialize(G4HCofThisEvent* hit_coll) {
 bool MUGPanelSD::ProcessHits(G4Step* step, G4TouchableHistory* /*history*/) {
 
   // which panel is this? Use copy number
-  const size_t panel_nr = step->GetPreStepPoint()->GetTouchable()->GetReplicaNumber(0); // mother
+  const size_t panel_nr = step->GetPreStepPoint()->GetTouchable()->GetCopyNumber();
 
   MUGLog::Out(MUGLog::debug, "Hit in detector panel nr. ", panel_nr, " detected");
 

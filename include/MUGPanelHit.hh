@@ -8,12 +8,11 @@
 #include "G4ThreeVector.hh"
 #include "G4Allocator.hh"
 
-class G4GenericMessenger;
 class MUGPanelHit : public G4VHit {
 
   public:
 
-    MUGPanelHit();
+    MUGPanelHit() = default;
     ~MUGPanelHit() = default;
 
     MUGPanelHit           (MUGPanelHit const&) = delete;
@@ -39,9 +38,6 @@ class MUGPanelHit : public G4VHit {
     void Print() override;
 
   private:
-
-    std::unique_ptr<G4GenericMessenger> fMessenger = nullptr;
-    void DefineCommands();
 
     bool fIsInitialized = false;
     double fEdep = 0;
