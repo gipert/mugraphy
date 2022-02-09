@@ -51,7 +51,7 @@ MUGProcessesList::MUGProcessesList() :
         G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade()));
 
   // Activate prodcuton of fission fragments in neutronHP
-  G4ParticleHPManager::GetInstance()->SetProduceFissionFragments( true );
+  G4ParticleHPManager::GetInstance()->SetProduceFissionFragments(true);
 
   // Stopping Physics
   this->RegisterPhysics(new G4StoppingPhysics(verbose));

@@ -1,7 +1,7 @@
-import pyg4ometry.visualisation as vis
-import pyg4ometry.geant4 as geant4
-import pyg4ometry.stl as stl
-import pyg4ometry.gdml as gdml
+from pyg4ometry import geant4
+from pyg4ometry import stl
+from pyg4ometry import gdml
+from pyg4ometry import visualisation as vis
 import numpy as np
 
 enable_cavities = False
@@ -38,7 +38,21 @@ pyramid_s = geant4.solid.GenericTrap('Pyramid',
 concrete_s = geant4.solid.Union("Concrete", pyramid_s, ground_s,
         tra2=[[0, 0, 0], [0, 0, - (h + ground_depth/2) + eps, 'm']], registry=reg)
 
-concrete_l = geant4.LogicalVolume(concrete_s, 'G4_CONCRETE', 'Concrete', reg)
+# rock_mat = geant4.MaterialPredefined('G4_CONCRETE')
+element = geant4.nist_element_2geant4Element
+rock_mat = geant4.MaterialCompound("Limestone", 10, 10, registry=reg)
+rock_mat.add_element_massfraction(element('G4_H'),  0.01)
+rock_mat.add_element_massfraction(element('G4_C'),  0.001)
+rock_mat.add_element_massfraction(element('G4_O'),  0.529107)
+rock_mat.add_element_massfraction(element('G4_Na'), 0.016)
+rock_mat.add_element_massfraction(element('G4_Mg'), 0.002)
+rock_mat.add_element_massfraction(element('G4_Al'), 0.033872)
+rock_mat.add_element_massfraction(element('G4_Si'), 0.337021)
+rock_mat.add_element_massfraction(element('G4_K'),  0.013)
+rock_mat.add_element_massfraction(element('G4_Ca'), 0.044)
+rock_mat.add_element_massfraction(element('G4_Fe'), 0.014)
+
+concrete_l = geant4.LogicalVolume(concrete_s, rock_mat, 'Concrete', reg)
 geant4.PhysicalVolume([0, 0, 0], [0, 0, -world_height/2 + h + ground_depth - eps, 'm'],
         concrete_l, 'Concrete', world_l, reg)
 
