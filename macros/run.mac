@@ -1,13 +1,18 @@
-# /MUG/Manager/Logging/LogLevelScreen summary
+# /MUG/Manager/Logging/LogLevelScreen debug
 # /MUG/Manager/Randomization/Seed 2
 
-/MUG/Geometry/IncludeGDMLFile /home/gipert/sw/src/mugraphy/src/geom/geometry-simple.gdml
+/MUG/Geometry/IncludeGDMLFile /home/gipert/sw/src/mugraphy/src/geom/geometry.gdml
 /MUG/Output/FileName detector-hits.root
 
 /run/initialize
 
-/MUG/Stepping/KillTrackBelowAltitude -45 m # offset of 60 needed here
+/MUG/Stepping/KillTrackBelowAltitude -60 m # ground is at -60 m
+
+# /MUG/Generator/SkyShape Plane
+# /MUG/Generator/SkyPlaneSize 3 m
+# /MUG/Generator/ThetaMax 1 deg
+
 /MUG/Generator/ThetaMax 70 deg
 /MUG/Generator/MomentumMin 20 GeV/c
 
-/run/beamOn 1000000
+/run/beamOn 1000
