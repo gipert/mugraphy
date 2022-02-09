@@ -2,10 +2,14 @@ import uproot
 import awkward as ak
 # import numpy as np
 # import hist
+import matplotlib
 import matplotlib.pyplot as plt
+import mplhep as hep
 from hist import Hist
 
-with uproot.open('detector-hits.root:ntuples;1') as events:
+# hep.style.use(["fira", "firamath"])
+
+with uproot.open('detector-hits.root:ntuples') as events:
     df = events.arrays(library='ak')
 
 print('INFO: ', len(df), ' total events')
@@ -32,9 +36,11 @@ h1 = (
 )
 h1.fill(x=ang_x, y=ang_y)
 
-h1.plot()
+# h1.plot()
 # h1.project("x").plot()
 # h1.project("y").plot()
+plt.figure(figsize=(8, 8))
+h1.plot2d_full(top_ls='-', side_yerr=False, top_yerr=False)
 
 theta = df.theta[..., 0]
 h2 = Hist.new.Reg(100, 0, 180, name='x', label=r'Azimuthal angle $\theta$ (deg)').Double()
