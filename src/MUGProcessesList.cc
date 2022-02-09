@@ -83,8 +83,8 @@ void MUGProcessesList::SetCuts() {
         MUGLog::OutFormat(MUGLog::debug, "Registering production cuts for region '{}'", region_name);
         auto cuts = region->GetProductionCuts();
         if (!cuts) cuts = new G4ProductionCuts;
-        cuts->SetProductionCut(1*u::mm, "mu-");
-        cuts->SetProductionCut(1*u::mm, "mu+");
+        cuts->SetProductionCut(1*u::cm, "mu-");
+        cuts->SetProductionCut(1*u::cm, "mu+");
         region->SetProductionCuts(cuts);
       }
       else MUGLog::OutFormat(MUGLog::warning, "Could not find region '{}' for production cuts settings",
