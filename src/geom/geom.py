@@ -4,6 +4,8 @@ import pyg4ometry.stl as stl
 import pyg4ometry.gdml as gdml
 import numpy as np
 
+enable_cavities = False
+
 print("INFO: building geometry")
 
 reg = geant4.Registry()
@@ -40,22 +42,28 @@ concrete_l = geant4.LogicalVolume(concrete_s, 'G4_CONCRETE', 'Concrete', reg)
 geant4.PhysicalVolume([0, 0, 0], [0, 0, -world_height/2 + h + ground_depth - eps, 'm'],
         concrete_l, 'Concrete', world_l, reg)
 
-r = stl.Reader("khufu-pyramid.stl", solidname="Cavities", scale=1000, registry=reg)
-cavities_s = r.getSolid()
-cavities_l = geant4.LogicalVolume(cavities_s, "G4_AIR", "Cavities", reg)
-geant4.PhysicalVolume([0, 0, 0], [0, 19.5, -75, 'm'],
-        cavities_l, 'Cavities', concrete_l, reg)
+if enable_cavities:
+    # read CAD model of cavities in
+    r = stl.Reader("khufu-pyramid.stl", solidname="Cavities", scale=1000, registry=reg)
+    cavities_s = r.getSolid()
+    cavities_l = geant4.LogicalVolume(cavities_s, "G4_AIR", "Cavities", reg)
+    geant4.PhysicalVolume([0, 0, 0], [0, 19.5, -75, 'm'],
+            cavities_l, 'Cavities', concrete_l, reg)
 
 det_s = geant4.solid.Box('Detector', 3, 3, 0.05, reg, 'm')
 det_l = geant4.LogicalVolume(det_s, 'G4_PHOTO_EMULSION', 'Detector', reg)
 
 queen_cham_floor = [0, -22, 18, 'm']
 geant4.PhysicalVolume([0, 0, 0], queen_cham_floor, det_l,
-        'LowerPanel', cavities_l, reg, copyNumber=0)
+        'LowerPanel', cavities_l if enable_cavities else concrete_l,
+        reg, copyNumber=0)
 
 queen_cham_floor[2] += 1
 geant4.PhysicalVolume([0, 0, 0], queen_cham_floor, det_l,
-        'UpperPanel', cavities_l, reg, copyNumber=1)
+        'UpperPanel', cavities_l if enable_cavities else concrete_l,
+        reg, copyNumber=1)
+
+# cavities_l.checkOverlaps()
 
 print("INFO: exporting to geometry.gdml")
 w = gdml.Writer()
