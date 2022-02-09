@@ -115,6 +115,15 @@ void MUGManager::Run() {
     MUGLog::Out(MUGLog::fatal, "Batch mode has been requested but no macro file has been set");
   }
 
+  std::unique_ptr<G4UIExecutive> session = nullptr;
+  if (!fBatchMode) {
+    MUGLog::Out(MUGLog::summary, "Entering interactive mode");
+    auto cval = std::getenv("DISPLAY");
+    auto val = cval == nullptr ? std::string("") : std::string(cval);
+    if (val.empty()) MUGLog::Out(MUGLog::warning, "DISPLAY not set, forcing G4UI_USE_CSH=1");
+    session = std::make_unique<G4UIExecutive>(fArgc, fArgv, val.empty() ? "csh" : "");
+  }
+
   auto UI = G4UImanager::GetUIpointer();
   for (const auto& macro : fMacroFileNames) {
     MUGLog::Out(MUGLog::summary, "Loading macro file: ", macro);
@@ -122,11 +131,6 @@ void MUGManager::Run() {
   }
 
   if (!fBatchMode) {
-    MUGLog::Out(MUGLog::summary, "Entering interactive mode");
-    auto cval = std::getenv("DISPLAY");
-    auto val = cval == nullptr ? std::string("") : std::string(cval);
-    if (val.empty()) MUGLog::Out(MUGLog::warning, "DISPLAY not set, forcing G4UI_USE_CSH=1");
-    auto session = std::make_unique<G4UIExecutive>(fArgc, fArgv, val.empty() ? "csh" : "");
     session->SetPrompt(MUGLog::Colorize<MUGLog::Ansi::unspecified>("mugraphy> ", G4cout, true));
     session->SessionStart();
   }
