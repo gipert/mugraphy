@@ -158,24 +158,16 @@
 			<materialref ref="G4_PHOTO_EMULSION"/>
 			<solidref ref="Detector"/>
 		</volume>
-		<volume name="Concrete">
-			<materialref ref="Limestone"/>
-			<solidref ref="Concrete"/>
-			<physvol name="LowerPanel">
-				<volumeref ref="Detector"/>
-				<position name="LowerPanel_pos" x="0.000000000000000" y="-2.500000000000000" z="-57.000000000000000" unit="m"/>
-			</physvol>
-			<physvol name="UpperPanel" copynumber="1">
-				<volumeref ref="Detector"/>
-				<position name="UpperPanel_pos" x="0.000000000000000" y="-2.500000000000000" z="-56.000000000000000" unit="m"/>
-			</physvol>
-		</volume>
 		<volume name="WorldAir">
 			<materialref ref="G4_AIR"/>
 			<solidref ref="WorldAir"/>
-			<physvol name="Concrete">
-				<volumeref ref="Concrete"/>
-				<position name="Concrete_pos" x="0.000000000000000" y="0.000000000000000" z="9.400000000000000" unit="m"/>
+			<physvol name="LowerPanel">
+				<volumeref ref="Detector"/>
+				<position name="LowerPanel_pos" x="0.000000000000000" y="-2.500000000000000" z="-47.500000000000000" unit="m"/>
+			</physvol>
+			<physvol name="UpperPanel" copynumber="1">
+				<volumeref ref="Detector"/>
+				<position name="UpperPanel_pos" x="0.000000000000000" y="-2.500000000000000" z="-46.500000000000000" unit="m"/>
 			</physvol>
 		</volume>
 	</structure>
