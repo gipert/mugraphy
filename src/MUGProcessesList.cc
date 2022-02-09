@@ -71,7 +71,7 @@ void MUGProcessesList::SetCuts() {
   MUGLog::Out(MUGLog::debug, "Setting particle cut values");
 
   // default production thresholds for the world volume
-  this->SetDefaultCutValue(0.1*u::m);
+  this->SetDefaultCutValue(1*u::m);
 
   // Set different cuts for the sensitive region
   auto region_name = "SensitiveRegion";
