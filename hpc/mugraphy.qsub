@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+#$ -P short
+#$ -cwd
+#$ -j y
+#$ -o /dev/null
+#$ -e /dev/null
+
+id="${SGE_TASK_ID}"
+batch="${1}"
+
+\cd "${batch}"
+
+export G4RUN_MANAGER_TYPE=Serial
+
+\singularity exec --cleanenv /lfs/l1/legend/users/pertoldi/sw/singularity/remage-base_g4.11.0.sif \
+    ../build/src/mugraphy -p -b "mac/${batch}-${id}.mac" &> "log/${batch}-${id}.log"
