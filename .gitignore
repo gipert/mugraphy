@@ -6,6 +6,7 @@ build
 .local
 *.step
 *.root
+*.sif
 
 compile_commands.json
 

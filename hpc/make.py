@@ -12,6 +12,6 @@ with open(template_macro) as f:
     text = f.read()
 
 for i in range(1, 201):
-    mtext = text.replace('$OUTPUT', f'runs/out/detector-hits-{i}.root')
+    mtext = text.replace('$OUTPUT', f'out/detector-hits-{i}.root')
     with open(f'runs/{batch}/mac/{batch}-{i}.mac', 'w') as fout:
         fout.write(mtext)
