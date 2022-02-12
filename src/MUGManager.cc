@@ -70,7 +70,9 @@ void MUGManager::Initialize() {
     if (fNThreads <= 0) fNThreads = G4Threading::G4GetNumberOfCores();
     else fNThreads = std::min(fNThreads, G4Threading::G4GetNumberOfCores());
     fG4RunManager->SetNumberOfThreads(fNThreads);
-}
+    MUGLog::OutFormat(MUGLog::detail, "Execution is multi-threaded ({} threads are used)", fNThreads);
+  }
+  else MUGLog::Out(MUGLog::detail, "Execution is sequential (one-threaded)");
 
   // restore buffer
   std::cout.rdbuf(orig_buf);
