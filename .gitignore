@@ -1,6 +1,7 @@
 /include/ProjectInfo.hh
 /doc/html
 /doc/latex
+/hpc/runs
 build
 .local
 *.step

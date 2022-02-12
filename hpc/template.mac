@@ -1,7 +1,7 @@
 # /MUG/Manager/Logging/LogLevelScreen debug
 # /MUG/Manager/Randomization/Seed 2
 
-/MUG/Geometry/IncludeGDMLFile /home/gipert/sw/src/mugraphy/src/geom/geometry.gdml
+/MUG/Geometry/IncludeGDMLFile geometry.gdml
 /MUG/Output/FileName $OUTPUT
 
 /run/initialize
@@ -15,4 +15,4 @@
 /MUG/Generator/ThetaMax 70 deg
 /MUG/Generator/MomentumMin 20 GeV/c
 
-/run/beamOn 50000000
+/run/beamOn 500000000
