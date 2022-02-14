@@ -21,7 +21,7 @@ jobs:
       matrix:
         container_version:
         - G4.11.0
-        # - slim
+        - slim
 
     container: docker://gipert/remage-base:${{ matrix.container_version }}
 
