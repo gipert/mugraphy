@@ -97,8 +97,8 @@ void MUGEventAction::EndOfEventAction(const G4Event* event) {
       fRunAction->GetXHitVec().push_back(hit->GetHitPos().getX() / G4Analysis::GetUnitValue("m"));
       fRunAction->GetYHitVec().push_back(hit->GetHitPos().getY() / G4Analysis::GetUnitValue("m"));
       fRunAction->GetZHitVec().push_back(hit->GetHitPos().getZ() / G4Analysis::GetUnitValue("m"));
-      fRunAction->GetThetaVec().push_back((CLHEP::pi - hit->GetMomDir().getTheta()) / G4Analysis::GetUnitValue("deg"));
-      fRunAction->GetPhiVec().push_back(hit->GetMomDir().getPhi() / G4Analysis::GetUnitValue("deg"));
+      fRunAction->GetThetaVec().push_back((CLHEP::pi - hit->GetMomDir().getTheta()) / G4Analysis::GetUnitValue("rad"));
+      fRunAction->GetPhiVec().push_back(hit->GetMomDir().getPhi() / G4Analysis::GetUnitValue("rad"));
     }
 
     ana_man->AddNtupleRow();
