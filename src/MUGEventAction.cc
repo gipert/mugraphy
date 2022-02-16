@@ -17,7 +17,8 @@
 
 #include "fmt/chrono.h"
 
-MUGEventAction::MUGEventAction() {
+MUGEventAction::MUGEventAction(MUGRunAction* run_action) :
+  fRunAction(run_action) {
   this->DefineCommands();
 }
 
@@ -47,13 +48,13 @@ void MUGEventAction::BeginOfEventAction(const G4Event* event) {
   }
 
   if (MUGManager::GetMUGManager()->IsPersistencyEnabled()) {
-    fPanelNr.clear();
-    fEdep.clear();
-    fXHit.clear();
-    fYHit.clear();
-    fZHit.clear();
-    fTheta.clear();
-    fPhi.clear();
+    fRunAction->GetPanelNrVec().clear();
+    fRunAction->GetEdepVec().clear();
+    fRunAction->GetXHitVec().clear();
+    fRunAction->GetYHitVec().clear();
+    fRunAction->GetZHitVec().clear();
+    fRunAction->GetThetaVec().clear();
+    fRunAction->GetPhiVec().clear();
   }
 }
 
@@ -77,8 +78,11 @@ void MUGEventAction::EndOfEventAction(const G4Event* event) {
     MUGLog::Out(MUGLog::debug, "Hit collection is empty at the end of event");
     return;
   }
-  else MUGLog::Out(MUGLog::debug, "Hit collection contains ", hit_coll->entries(),
+  else {
+    MUGLog::Out(MUGLog::debug, "Hit collection contains ", hit_coll->entries(),
       " panel hits at the end of the event");
+    fRunAction->RegisterHit();
+  }
 
   if (MUGManager::GetMUGManager()->IsPersistencyEnabled()) {
     MUGLog::Out(MUGLog::debug, "Filling data vectors for objects persistency");
@@ -88,13 +92,13 @@ void MUGEventAction::EndOfEventAction(const G4Event* event) {
     for (auto hit : *hit_coll->GetVector()) {
       if (!hit) continue;
       hit->Print();
-      fPanelNr.push_back(hit->GetPanelNr());
-      fEdep.push_back(hit->GetEdep() / G4Analysis::GetUnitValue("MeV"));
-      fXHit.push_back(hit->GetHitPos().getX() / G4Analysis::GetUnitValue("m"));
-      fYHit.push_back(hit->GetHitPos().getY() / G4Analysis::GetUnitValue("m"));
-      fZHit.push_back(hit->GetHitPos().getZ() / G4Analysis::GetUnitValue("m"));
-      fTheta.push_back((CLHEP::pi - hit->GetMomDir().getTheta()) / G4Analysis::GetUnitValue("deg"));
-      fPhi.push_back(hit->GetMomDir().getPhi() / G4Analysis::GetUnitValue("deg"));
+      fRunAction->GetPanelNrVec().push_back(hit->GetPanelNr());
+      fRunAction->GetEdepVec().push_back(hit->GetEdep() / G4Analysis::GetUnitValue("MeV"));
+      fRunAction->GetXHitVec().push_back(hit->GetHitPos().getX() / G4Analysis::GetUnitValue("m"));
+      fRunAction->GetYHitVec().push_back(hit->GetHitPos().getY() / G4Analysis::GetUnitValue("m"));
+      fRunAction->GetZHitVec().push_back(hit->GetHitPos().getZ() / G4Analysis::GetUnitValue("m"));
+      fRunAction->GetThetaVec().push_back((CLHEP::pi - hit->GetMomDir().getTheta()) / G4Analysis::GetUnitValue("deg"));
+      fRunAction->GetPhiVec().push_back(hit->GetMomDir().getPhi() / G4Analysis::GetUnitValue("deg"));
     }
 
     ana_man->AddNtupleRow();

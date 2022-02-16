@@ -8,6 +8,7 @@
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4AnalysisManager.hh"
+#include "G4AccumulableManager.hh"
 
 #include "MUGRun.hh"
 #include "MUGLog.hh"
@@ -22,21 +23,23 @@ G4Run* MUGRunAction::GenerateRun() {
   return fMUGRun;
 }
 
-MUGRunAction::MUGRunAction(MUGEventAction* ev_action, bool persistency) :
-  fEventAction(ev_action),
+MUGRunAction::MUGRunAction(bool persistency) :
   fIsPersistencyEnabled(persistency) {
 
   this->DefineCommands();
   if (fIsPersistencyEnabled) { this->SetupAnalysisManager(); }
+
+  G4AccumulableManager::Instance()->RegisterAccumulable(fTotalHits);
 }
 
-MUGRunAction::MUGRunAction(MUGEventAction* ev_action, MUGGenerator* gene, bool persistency) :
-  fEventAction(ev_action),
+MUGRunAction::MUGRunAction(MUGGenerator* gene, bool persistency) :
   fMUGGenerator(gene),
   fIsPersistencyEnabled(persistency) {
 
   this->DefineCommands();
   if (fIsPersistencyEnabled) { this->SetupAnalysisManager(); }
+
+  G4AccumulableManager::Instance()->RegisterAccumulable(fTotalHits);
 }
 
 MUGRunAction::~MUGRunAction() {
@@ -54,17 +57,15 @@ void MUGRunAction::SetupAnalysisManager() {
 
   if (!MUGManager::GetMUGManager()->IsExecSequential()) ana_man->SetNtupleMerging(true);
 
-  if (!fEventAction) MUGLog::Out(MUGLog::fatal, "Event action pointer stored by MUGRunAction is null");
-
   // create tuples
   ana_man->CreateNtuple("ntuples", "Event information");
-  ana_man->CreateNtupleIColumn("panel",  fEventAction->GetPanelNrVec());
-  ana_man->CreateNtupleFColumn("energy", fEventAction->GetEdepVec());
-  ana_man->CreateNtupleFColumn("xhit",   fEventAction->GetXHitVec());
-  ana_man->CreateNtupleFColumn("yhit",   fEventAction->GetYHitVec());
-  ana_man->CreateNtupleFColumn("zhit",   fEventAction->GetZHitVec());
-  ana_man->CreateNtupleFColumn("theta",  fEventAction->GetThetaVec());
-  ana_man->CreateNtupleFColumn("phi",    fEventAction->GetPhiVec());
+  ana_man->CreateNtupleIColumn("panel",  fPanelNr);
+  ana_man->CreateNtupleFColumn("energy", fEdep);
+  ana_man->CreateNtupleFColumn("xhit",   fXHit);
+  ana_man->CreateNtupleFColumn("yhit",   fYHit);
+  ana_man->CreateNtupleFColumn("zhit",   fZHit);
+  ana_man->CreateNtupleFColumn("theta",  fTheta);
+  ana_man->CreateNtupleFColumn("phi",    fPhi);
   ana_man->FinishNtuple();
 }
 
@@ -73,6 +74,8 @@ void MUGRunAction::BeginOfRunAction(const G4Run*) {
   MUGLog::OutDev(MUGLog::debug, "Start of run action");
 
   auto manager = MUGManager::GetMUGManager();
+
+  G4AccumulableManager::Instance()->Reset();
 
   if (fIsPersistencyEnabled) {
     auto ana_man = G4AnalysisManager::Instance();
@@ -113,6 +116,8 @@ void MUGRunAction::EndOfRunAction(const G4Run*) {
 
   if (fMUGGenerator) fMUGGenerator->EndOfRunAction();
 
+  G4AccumulableManager::Instance()->Merge();
+
   if (fIsPersistencyEnabled) {
     auto ana_man = G4AnalysisManager::Instance();
     ana_man->Write();
@@ -132,6 +137,9 @@ void MUGRunAction::EndOfRunAction(const G4Run*) {
     long elapsed_h = (tot_elapsed_s - partial) / 3600;  partial += elapsed_h * 3600;
     long elapsed_m = (tot_elapsed_s - partial) / 60;    partial += elapsed_m * 60;
     long elapsed_s = tot_elapsed_s - partial;
+
+    MUGLog::OutFormat(MUGLog::summary, "Stats: {:d} detector hits, detection efficiency = {:.5g}",
+        fTotalHits.GetValue(), fTotalHits.GetValue()*1./fMUGRun->GetNumberOfEventToBeProcessed());
 
     MUGLog::OutFormat(MUGLog::summary, "Stats: run time was {:d} days, {:d} hours, {:d} minutes and {:d} seconds",
         elapsed_d, elapsed_h, elapsed_m, elapsed_s);
