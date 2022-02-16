@@ -46,6 +46,11 @@ class MUGGenerator : public G4VUserPrimaryGeneratorAction {
     SkyShape fSkyShape = kSphere;
     float fSkyPlaneSize = -1;
 
+    float fSpherePositionThetaMin = 0 * u::deg;
+    float fSpherePositionThetaMax = 90 * u::deg;
+    float fSpherePositionPhiMin   = 0 * u::deg;
+    float fSpherePositionPhiMax   = 360 * u::deg;
+
     float fMomentumMin = 0 * u::GeV;
     float fMomentumMax = 1 * u::TeV;
     float fThetaMin    = 0 * u::deg;

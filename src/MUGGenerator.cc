@@ -70,6 +70,10 @@ void MUGGenerator::BeginOfRunAction() {
   fEcoMug->SetMaximumTheta(fThetaMax / u::rad);
   fEcoMug->SetMinimumPhi(fPhiMin / u::rad);
   fEcoMug->SetMaximumPhi(fPhiMax / u::rad);
+  fEcoMug->SetHSphereMinPositionTheta(fSpherePositionThetaMin / u::rad);
+  fEcoMug->SetHSphereMaxPositionTheta(fSpherePositionThetaMax / u::rad);
+  fEcoMug->SetHSphereMinPositionPhi(fSpherePositionPhiMin / u::rad);
+  fEcoMug->SetHSphereMaxPositionPhi(fSpherePositionPhiMax / u::rad);
 
   // FIXME: somehow this always sets the same seed
   // MUGLog::OutFormat(MUGLog::debug, "EcoMug random seed: {}", CLHEP::HepRandom::getTheSeed());
@@ -96,8 +100,8 @@ void MUGGenerator::GeneratePrimaries(G4Event* event) {
   d_cart.setMag(1*u::m);
   fGun->SetParticleMomentumDirection(d_cart);
 
-  MUGLog::OutFormat(MUGLog::debug, "...direction (θ,φ) = ({:.4g}, {:.4g}) rad",
-      fEcoMug->GetGenerationTheta(), fEcoMug->GetGenerationPhi());
+  MUGLog::OutFormat(MUGLog::debug, "...direction (θ,φ) = ({:.4g}, {:.4g}) deg",
+      fEcoMug->GetGenerationTheta()/u::deg, fEcoMug->GetGenerationPhi()/u::deg);
   MUGLog::OutFormat(MUGLog::debug, "...direction (x,y,z) = ({:.4g}, {:.4g}, {:.4g}) m",
       d_cart.getX()/u::m, d_cart.getY()/u::m, d_cart.getZ()/u::m);
 
@@ -150,28 +154,56 @@ void MUGGenerator::DefineCommands() {
     .SetStates(G4State_PreInit, G4State_Idle);
 
   fMessenger->DeclarePropertyWithUnit("ThetaMin", "deg", fThetaMin)
-    .SetGuidance("Minimum zenith angle of the generated muon")
+    .SetGuidance("Minimum azimutal angle of the generated muon momentum")
     .SetParameterName("a", false)
     .SetRange("a >= 0 && a < 90")
     .SetToBeBroadcasted(true)
     .SetStates(G4State_PreInit, G4State_Idle);
 
   fMessenger->DeclarePropertyWithUnit("ThetaMax", "deg", fThetaMax)
-    .SetGuidance("Maximum zenith angle of the generated muon")
+    .SetGuidance("Maximum azimutal angle of the generated muon momentum")
     .SetParameterName("a", false)
     .SetRange("a > 0 && a <= 90")
     .SetToBeBroadcasted(true)
     .SetStates(G4State_PreInit, G4State_Idle);
 
   fMessenger->DeclarePropertyWithUnit("PhiMin", "deg", fPhiMin)
-    .SetGuidance("Minimum polar angle of the generated muon")
+    .SetGuidance("Minimum zenith angle of the generated muon momentum")
     .SetParameterName("a", false)
     .SetRange("a >= 0 && a < 360")
     .SetToBeBroadcasted(true)
     .SetStates(G4State_PreInit, G4State_Idle);
 
   fMessenger->DeclarePropertyWithUnit("PhiMax", "deg", fPhiMax)
-    .SetGuidance("Maximum polar angle of the generated muon")
+    .SetGuidance("Maximum zenith angle of the generated muon momentum")
+    .SetParameterName("a", false)
+    .SetRange("a > 0 && a <= 360")
+    .SetToBeBroadcasted(true)
+    .SetStates(G4State_PreInit, G4State_Idle);
+
+  fMessenger->DeclarePropertyWithUnit("SpherePositionThetaMin", "deg", fSpherePositionThetaMin)
+    .SetGuidance("Minimum azimutal angle of the generated muon position on the sphere")
+    .SetParameterName("a", false)
+    .SetRange("a >= 0 && a < 90")
+    .SetToBeBroadcasted(true)
+    .SetStates(G4State_PreInit, G4State_Idle);
+
+  fMessenger->DeclarePropertyWithUnit("SpherePositionThetaMax", "deg", fSpherePositionThetaMax)
+    .SetGuidance("Maximum azimutal angle of the generated muon position on the sphere")
+    .SetParameterName("a", false)
+    .SetRange("a > 0 && a <= 90")
+    .SetToBeBroadcasted(true)
+    .SetStates(G4State_PreInit, G4State_Idle);
+
+  fMessenger->DeclarePropertyWithUnit("SpherePositionPhiMin", "deg", fSpherePositionPhiMin)
+    .SetGuidance("Minimum zenith angle of the generated muon position on the sphere")
+    .SetParameterName("a", false)
+    .SetRange("a >= 0 && a < 360")
+    .SetToBeBroadcasted(true)
+    .SetStates(G4State_PreInit, G4State_Idle);
+
+  fMessenger->DeclarePropertyWithUnit("SpherePositionPhiMax", "deg", fSpherePositionPhiMax)
+    .SetGuidance("Maximum zenith angle of the generated muon position on the sphere")
     .SetParameterName("a", false)
     .SetRange("a > 0 && a <= 360")
     .SetToBeBroadcasted(true)
