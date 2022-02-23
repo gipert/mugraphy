@@ -12,7 +12,8 @@
 # /MUG/Generator/SkyPlaneSize 3 m
 # /MUG/Generator/ThetaMax 1 deg
 
-/MUG/Generator/ThetaMax 70 deg
+/MUG/Generator/ThetaMax 45 deg
+/MUG/Generator/SpherePositionThetaMax 45 deg
 /MUG/Generator/MomentumMin 20 GeV/c
 
 /run/beamOn 1000
