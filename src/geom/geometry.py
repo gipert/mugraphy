@@ -4,7 +4,7 @@ from pyg4ometry import gdml
 from pyg4ometry import visualisation as vis
 import numpy as np
 
-enable_cavities = False
+enable_cavities = True
 enable_pyramid = True
 
 print("INFO: building geometry")
@@ -15,7 +15,7 @@ reg = geant4.Registry()
 sky_height = 170
 world_side = 330
 ground_depth = 50
-eps = 0.1 # gap between volumes and world
+eps = 0.001  # gap between volumes and world
 
 world_height = sky_height + ground_depth
 
@@ -24,70 +24,98 @@ world_s = geant4.solid.Box('WorldAir', world_side, world_side, world_height, reg
 world_l = geant4.LogicalVolume(world_s, 'G4_AIR', 'WorldAir', reg)
 reg.setWorld(world_l)
 
+# generic limestone material
+element = geant4.nist_element_2geant4Element
+rock_mat = geant4.MaterialCompound("Limestone", 2.2, 3, registry=reg)
+rock_mat.add_element_massfraction(element('G4_C'),  0.12)
+rock_mat.add_element_massfraction(element('G4_O'),  0.48)
+rock_mat.add_element_massfraction(element('G4_Ca'), 0.4)
+
 # ground
 ground_s = geant4.solid.Box('Ground', world_side-eps, world_side-eps, ground_depth-eps, reg, lunit='m')
+ground_l = geant4.LogicalVolume(ground_s, rock_mat, 'Ground', reg)
+geant4.PhysicalVolume([0, 0, 0], [0, 0, -world_height/2 + ground_depth/2 + eps/2, 'm'],
+                      ground_l, 'Ground', world_l, reg)
 
-l = 230./2
-h = 139./2
-pyramid_s = geant4.solid.GenericTrap('Pyramid',
-        -l, -l, -l, l, l, l, l, -l,
-        -0, -0, -0, 0, 0, 0, 0, -0,
-        h,
-        reg, lunit='m')
+ground_level = -world_height/2 + ground_depth
+print('INFO: ground level is at z =', -world_height/2 + ground_depth, 'm')
 
-# adding an eps to make the ground and the pyramid overlap
-concrete_s = geant4.solid.Union("Concrete", pyramid_s, ground_s,
-        tra2=[[0, 0, 0], [0, 0, - (h + ground_depth/2) + eps, 'm']], registry=reg)
+# pyramid
+p_side = 230.3
+p_height = 138.5
+p_height_orig = 146.5
+dl = (p_height_orig - p_height) * p_side/2/p_height
+pyramid_s = geant4.solid.Trd('Pyramid', p_side, dl, p_side, dl, p_height, reg, lunit='m')
 
-# rock_mat = geant4.MaterialPredefined('G4_CONCRETE')
-element = geant4.nist_element_2geant4Element
-rock_mat = geant4.MaterialCompound("Limestone", 2.2, 10, registry=reg)
-rock_mat.add_element_massfraction(element('G4_H'),  0.01)
-rock_mat.add_element_massfraction(element('G4_C'),  0.001)
-rock_mat.add_element_massfraction(element('G4_O'),  0.529107)
-rock_mat.add_element_massfraction(element('G4_Na'), 0.016)
-rock_mat.add_element_massfraction(element('G4_Mg'), 0.002)
-rock_mat.add_element_massfraction(element('G4_Al'), 0.033872)
-rock_mat.add_element_massfraction(element('G4_Si'), 0.337021)
-rock_mat.add_element_massfraction(element('G4_K'),  0.013)
-rock_mat.add_element_massfraction(element('G4_Ca'), 0.044)
-rock_mat.add_element_massfraction(element('G4_Fe'), 0.014)
-
-concrete_l = geant4.LogicalVolume(concrete_s, rock_mat, 'Concrete', reg)
+pyramid_l = geant4.LogicalVolume(pyramid_s, rock_mat, 'Pyramid', reg)
 if enable_pyramid:
-    geant4.PhysicalVolume([0, 0, 0], [0, 0, -world_height/2 + h + ground_depth - eps, 'm'],
-            concrete_l, 'Concrete', world_l, reg)
+    geant4.PhysicalVolume([0, 0, 0], [0, 0, -world_height/2 + ground_depth + p_height/2 + eps, 'm'],
+                          pyramid_l, 'Pyramid', world_l, reg)
 
-cavities_pos = [0, 19.5, -75, 'm']
+p_off = -p_height/2
+
 if enable_cavities:
-    # read CAD model of cavities in
-    r = stl.Reader("khufu-pyramid.stl", solidname="Cavities", scale=1000, registry=reg)
-    cavities_s = r.getSolid()
-    cavities_l = geant4.LogicalVolume(cavities_s, "G4_AIR", "Cavities", reg)
-    geant4.PhysicalVolume([0, 0, 0], cavities_pos,
-            cavities_l, 'Cavities', concrete_l, reg)
+    # Queen's chamber core
+    queen_cham_s = geant4.solid.Box('QueenChamber', 5.3, 6.7, 4.7, reg, lunit='m')
+    queen_cham_l = geant4.LogicalVolume(queen_cham_s, 'G4_AIR', 'QueenChamber', reg)
+    geant4.PhysicalVolume([0, 0, 0], [0, 1.8, 23.3 + p_off, 'm'],
+                          queen_cham_l, 'QueenChamber', pyramid_l, reg)
+    # Queen's chamber hat
+    queen_hat_s = geant4.solid.Trd('QueenHat', 5.3, 0, 6.7, 6.7, 1.5, reg, lunit='m')
+    queen_hat_l = geant4.LogicalVolume(queen_hat_s, 'G4_AIR', 'QueenHat', reg)
+    geant4.PhysicalVolume([0, 0, 0], [0, 1.8, 23.3 + 4.7/2 + 1.5/2 + eps + p_off, 'm'],
+                          queen_hat_l, 'QueenHat', pyramid_l, reg)
 
+    # King's chamber
+    king_cham_dx = 5.2
+    king_cham_dy = 10.6
+    king_cham_dz = 5.7
+    king_cham_s = geant4.solid.Box('KingChamber', king_cham_dx, king_cham_dy, king_cham_dz,
+                                   reg, lunit='m')
+    king_cham_l = geant4.LogicalVolume(king_cham_s, 'G4_AIR', 'KingChamber', reg)
+    geant4.PhysicalVolume([0, 0, 0], [-10.9, 4.7, 42.8 + p_off, 'm'],
+                          king_cham_l, 'KingChamber', pyramid_l, reg)
+
+    king_buff_dz = [0.88, 1.02, 1.33, 1.24]
+    king_buff_z = [2.49, 5.13, 7.95, 10.66]  # relative to the roof of King's chamber
+    for i in range(len(king_buff_z)):
+        king_buff_s = geant4.solid.Box('KingChamberAirBuffer'+str(i), king_cham_dx, king_cham_dy, king_buff_dz[i],
+                                       reg, lunit='m')
+        king_buff_l = geant4.LogicalVolume(king_buff_s, 'G4_AIR', 'KingChamberAirBuffer'+str(i), reg)
+        geant4.PhysicalVolume([0, 0, 0], [-10.9, 4.7, 42.8 + king_cham_dz/2 + king_buff_z[i] + p_off, 'm'],
+                              king_buff_l, 'KingChamberAirBuffer'+str(i), pyramid_l, reg)
+
+    # Grand gallery
+    grand_gallery_slope = 26.7
+    grand_gallery_s = geant4.solid.Para('GrandGallery', 47.2, 2.1, 7.7,
+                                        0, -grand_gallery_slope*np.pi/180, 0,
+                                        reg, lunit='m')
+    grand_gallery_l = geant4.LogicalVolume(grand_gallery_s, 'G4_AIR', 'GrandGallery', reg)
+    geant4.PhysicalVolume([0, -grand_gallery_slope*np.pi/180, 0], [21.7, 0, 36.2 + p_off, 'm'],
+                          grand_gallery_l, 'GrandGallery', pyramid_l, reg)
+
+# detector(s)
 det_s = geant4.solid.Box('Detector', 3, 3, 0.05, reg, 'm')
 det_l = geant4.LogicalVolume(det_s, 'G4_PHOTO_EMULSION', 'Detector', reg)
 
 if enable_cavities:
-    queen_cham_floor = [0, -22, 18, 'm']
-    mother = cavities_l
+    queen_cham_floor = [0, 0, -2.375 + 0.1, 'm']  # why do I need to add this much??
+    mother = queen_cham_l
 elif enable_pyramid:
-    queen_cham_floor = [0, -2.5, -57, 'm']
-    mother = concrete_l
+    queen_cham_floor = [0, 1.3, 20.95 + p_off, 'm']
+    mother = pyramid_l
 else:
-    queen_cham_floor = [0, -2.5, -47.5, 'm']
+    queen_cham_floor = [0, 1.3, ground_level + 20.95, 'm']
     mother = world_l
 
 geant4.PhysicalVolume([0, 0, 0], queen_cham_floor, det_l,
-        'LowerPanel', mother, reg, copyNumber=0)
+                      'LowerPanel', mother, reg, copyNumber=0)
 
 queen_cham_floor[2] += 1
 geant4.PhysicalVolume([0, 0, 0], queen_cham_floor, det_l,
-        'UpperPanel', mother, reg, copyNumber=1)
+                      'UpperPanel', mother, reg, copyNumber=1)
 
-# cavities_l.checkOverlaps()
+world_l.checkOverlaps(recursive=True)
 
 print("INFO: exporting to geometry.gdml")
 w = gdml.Writer()
@@ -98,5 +126,5 @@ w.write('geometry.gdml')
 # v = vis.VtkViewer()
 # v.addLogicalVolume(reg.getWorldVolume())
 # v.addAxes(100000)
-# v.setCameraFocusPosition(focalPoint=[0,0,0], position=[100,0,0])
+# v.setCameraFocusPosition(focalPoint=[0,0,0], position=[1,0,0])
 # v.view()

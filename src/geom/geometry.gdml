@@ -2,16 +2,6 @@
 <gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
 	<define/>
 	<materials>
-		<isotope name="G4_H_1" Z="1" N="1">
-			<atom value="1.007825"/>
-		</isotope>
-		<isotope name="G4_H_2" Z="1" N="2">
-			<atom value="2.014102"/>
-		</isotope>
-		<element name="G4_H" formula="H">
-			<fraction ref="G4_H_1" n="0.999885"/>
-			<fraction ref="G4_H_2" n="0.000115"/>
-		</element>
 		<isotope name="G4_C_12" Z="6" N="12">
 			<atom value="12.0"/>
 		</isotope>
@@ -35,54 +25,6 @@
 			<fraction ref="G4_O_16" n="0.99757"/>
 			<fraction ref="G4_O_17" n="0.00038"/>
 			<fraction ref="G4_O_18" n="0.00205"/>
-		</element>
-		<element name="G4_Na" formula="Na" Z="11">
-			<atom value="23"/>
-		</element>
-		<isotope name="G4_Mg_24" Z="12" N="24">
-			<atom value="23.985"/>
-		</isotope>
-		<isotope name="G4_Mg_25" Z="12" N="25">
-			<atom value="24.9858"/>
-		</isotope>
-		<isotope name="G4_Mg_26" Z="12" N="26">
-			<atom value="25.9826"/>
-		</isotope>
-		<element name="G4_Mg" formula="Mg">
-			<fraction ref="G4_Mg_24" n="0.7899"/>
-			<fraction ref="G4_Mg_25" n="0.1"/>
-			<fraction ref="G4_Mg_26" n="0.1101"/>
-		</element>
-		<element name="G4_Al" formula="Al" Z="13">
-			<atom value="27"/>
-		</element>
-		<isotope name="G4_Si_28" Z="14" N="28">
-			<atom value="27.9769"/>
-		</isotope>
-		<isotope name="G4_Si_29" Z="14" N="29">
-			<atom value="28.9765"/>
-		</isotope>
-		<isotope name="G4_Si_30" Z="14" N="30">
-			<atom value="29.9738"/>
-		</isotope>
-		<element name="G4_Si" formula="Si">
-			<fraction ref="G4_Si_28" n="0.9222961"/>
-			<fraction ref="G4_Si_29" n="0.04683195"/>
-			<fraction ref="G4_Si_30" n="0.03087197"/>
-		</element>
-		<isotope name="G4_K_39" Z="19" N="39">
-			<atom value="38.9637"/>
-		</isotope>
-		<isotope name="G4_K_40" Z="19" N="40">
-			<atom value="39.964"/>
-		</isotope>
-		<isotope name="G4_K_41" Z="19" N="41">
-			<atom value="40.9618"/>
-		</isotope>
-		<element name="G4_K" formula="K">
-			<fraction ref="G4_K_39" n="0.932581"/>
-			<fraction ref="G4_K_40" n="0.000117"/>
-			<fraction ref="G4_K_41" n="0.067302"/>
 		</element>
 		<isotope name="G4_Ca_40" Z="20" N="40">
 			<atom value="39.9626"/>
@@ -110,64 +52,123 @@
 			<fraction ref="G4_Ca_46" n="4e-05"/>
 			<fraction ref="G4_Ca_48" n="0.00187"/>
 		</element>
-		<isotope name="G4_Fe_54" Z="26" N="54">
-			<atom value="53.9396"/>
-		</isotope>
-		<isotope name="G4_Fe_56" Z="26" N="56">
-			<atom value="55.9349"/>
-		</isotope>
-		<isotope name="G4_Fe_57" Z="26" N="57">
-			<atom value="56.9354"/>
-		</isotope>
-		<isotope name="G4_Fe_58" Z="26" N="58">
-			<atom value="57.9333"/>
-		</isotope>
-		<element name="G4_Fe" formula="Fe">
-			<fraction ref="G4_Fe_54" n="0.05845"/>
-			<fraction ref="G4_Fe_56" n="0.91754"/>
-			<fraction ref="G4_Fe_57" n="0.02119"/>
-			<fraction ref="G4_Fe_58" n="0.00282"/>
-		</element>
 		<material name="Limestone">
 			<D value="2.2"/>
-			<fraction ref="G4_H" n="0.01"/>
-			<fraction ref="G4_C" n="0.001"/>
-			<fraction ref="G4_O" n="0.529107"/>
-			<fraction ref="G4_Na" n="0.016"/>
-			<fraction ref="G4_Mg" n="0.002"/>
-			<fraction ref="G4_Al" n="0.033872"/>
-			<fraction ref="G4_Si" n="0.337021"/>
-			<fraction ref="G4_K" n="0.013"/>
-			<fraction ref="G4_Ca" n="0.044"/>
-			<fraction ref="G4_Fe" n="0.014"/>
+			<fraction ref="G4_C" n="0.12"/>
+			<fraction ref="G4_O" n="0.48"/>
+			<fraction ref="G4_Ca" n="0.4"/>
 		</material>
 	</materials>
 	<solids>
 		<box name="WorldAir" x="330" y="330" z="220" lunit="m"/>
-		<box name="Ground" x="329.9" y="329.9" z="49.9" lunit="m"/>
-		<arb8 name="Pyramid" v1x="-115.0" v1y="-115.0" v2x="-115.0" v2y="115.0" v3x="115.0" v3y="115.0" v4x="115.0" v4y="-115.0" v5x="0" v5y="0" v6x="0" v6y="0" v7x="0" v7y="0" v8x="0" v8y="0" dz="69.5" lunit="m"/>
-		<union name="Concrete">
-			<first ref="Pyramid"/>
-			<second ref="Ground"/>
-			<position name="Concrete_translation" x="0.000000000000000" y="0.000000000000000" z="-94.400000000000006" unit="m"/>
-		</union>
+		<box name="Ground" x="329.999" y="329.999" z="49.999" lunit="m"/>
+		<trd name="Pyramid" x1="230.3" x2="6.651263537906138" y1="230.3" y2="6.651263537906138" z="138.5" lunit="m"/>
+		<box name="QueenChamber" x="5.3" y="6.7" z="4.7" lunit="m"/>
+		<trd name="QueenHat" x1="5.3" x2="0" y1="6.7" y2="6.7" z="1.5" lunit="m"/>
+		<box name="KingChamber" x="5.2" y="10.6" z="5.7" lunit="m"/>
+		<box name="KingChamberAirBuffer0" x="5.2" y="10.6" z="0.88" lunit="m"/>
+		<box name="KingChamberAirBuffer1" x="5.2" y="10.6" z="1.02" lunit="m"/>
+		<box name="KingChamberAirBuffer2" x="5.2" y="10.6" z="1.33" lunit="m"/>
+		<box name="KingChamberAirBuffer3" x="5.2" y="10.6" z="1.24" lunit="m"/>
+		<para name="GrandGallery" x="47.2" y="2.1" z="7.7" alpha="0" theta="-0.4660029102824859" phi="0" lunit="m" aunit="rad"/>
 		<box name="Detector" x="3" y="3" z="0.05" lunit="m"/>
 	</solids>
 	<structure>
+		<volume name="Ground">
+			<materialref ref="Limestone"/>
+			<solidref ref="Ground"/>
+		</volume>
 		<volume name="Detector">
 			<materialref ref="G4_PHOTO_EMULSION"/>
 			<solidref ref="Detector"/>
 		</volume>
-		<volume name="WorldAir">
+		<volume name="QueenChamber">
 			<materialref ref="G4_AIR"/>
-			<solidref ref="WorldAir"/>
+			<solidref ref="QueenChamber"/>
 			<physvol name="LowerPanel">
 				<volumeref ref="Detector"/>
-				<position name="LowerPanel_pos" x="0.000000000000000" y="-2.500000000000000" z="-47.500000000000000" unit="m"/>
+				<position name="LowerPanel_pos" x="0.000000000000000" y="0.000000000000000" z="-2.275000000000000" unit="m"/>
 			</physvol>
 			<physvol name="UpperPanel" copynumber="1">
 				<volumeref ref="Detector"/>
-				<position name="UpperPanel_pos" x="0.000000000000000" y="-2.500000000000000" z="-46.500000000000000" unit="m"/>
+				<position name="UpperPanel_pos" x="0.000000000000000" y="0.000000000000000" z="-1.275000000000000" unit="m"/>
+			</physvol>
+		</volume>
+		<volume name="QueenHat">
+			<materialref ref="G4_AIR"/>
+			<solidref ref="QueenHat"/>
+		</volume>
+		<volume name="KingChamber">
+			<materialref ref="G4_AIR"/>
+			<solidref ref="KingChamber"/>
+		</volume>
+		<volume name="KingChamberAirBuffer0">
+			<materialref ref="G4_AIR"/>
+			<solidref ref="KingChamberAirBuffer0"/>
+		</volume>
+		<volume name="KingChamberAirBuffer1">
+			<materialref ref="G4_AIR"/>
+			<solidref ref="KingChamberAirBuffer1"/>
+		</volume>
+		<volume name="KingChamberAirBuffer2">
+			<materialref ref="G4_AIR"/>
+			<solidref ref="KingChamberAirBuffer2"/>
+		</volume>
+		<volume name="KingChamberAirBuffer3">
+			<materialref ref="G4_AIR"/>
+			<solidref ref="KingChamberAirBuffer3"/>
+		</volume>
+		<volume name="GrandGallery">
+			<materialref ref="G4_AIR"/>
+			<solidref ref="GrandGallery"/>
+		</volume>
+		<volume name="Pyramid">
+			<materialref ref="Limestone"/>
+			<solidref ref="Pyramid"/>
+			<physvol name="QueenChamber">
+				<volumeref ref="QueenChamber"/>
+				<position name="QueenChamber_pos" x="0.000000000000000" y="1.800000000000000" z="-45.950000000000003" unit="m"/>
+			</physvol>
+			<physvol name="QueenHat">
+				<volumeref ref="QueenHat"/>
+				<position name="QueenHat_pos" x="0.000000000000000" y="1.800000000000000" z="-42.848999999999997" unit="m"/>
+			</physvol>
+			<physvol name="KingChamber">
+				<volumeref ref="KingChamber"/>
+				<position name="KingChamber_pos" x="-10.900000000000000" y="4.700000000000000" z="-26.450000000000003" unit="m"/>
+			</physvol>
+			<physvol name="KingChamberAirBuffer0">
+				<volumeref ref="KingChamberAirBuffer0"/>
+				<position name="KingChamberAirBuffer0_pos" x="-10.900000000000000" y="4.700000000000000" z="-21.109999999999999" unit="m"/>
+			</physvol>
+			<physvol name="KingChamberAirBuffer1">
+				<volumeref ref="KingChamberAirBuffer1"/>
+				<position name="KingChamberAirBuffer1_pos" x="-10.900000000000000" y="4.700000000000000" z="-18.469999999999999" unit="m"/>
+			</physvol>
+			<physvol name="KingChamberAirBuffer2">
+				<volumeref ref="KingChamberAirBuffer2"/>
+				<position name="KingChamberAirBuffer2_pos" x="-10.900000000000000" y="4.700000000000000" z="-15.649999999999999" unit="m"/>
+			</physvol>
+			<physvol name="KingChamberAirBuffer3">
+				<volumeref ref="KingChamberAirBuffer3"/>
+				<position name="KingChamberAirBuffer3_pos" x="-10.900000000000000" y="4.700000000000000" z="-12.939999999999998" unit="m"/>
+			</physvol>
+			<physvol name="GrandGallery">
+				<volumeref ref="GrandGallery"/>
+				<position name="GrandGallery_pos" x="21.699999999999999" y="0.000000000000000" z="-33.049999999999997" unit="m"/>
+				<rotation name="GrandGallery_rot" x="0.000000000000000" y="-0.466002910282486" z="0.000000000000000" unit="rad"/>
+			</physvol>
+		</volume>
+		<volume name="WorldAir">
+			<materialref ref="G4_AIR"/>
+			<solidref ref="WorldAir"/>
+			<physvol name="Ground">
+				<volumeref ref="Ground"/>
+				<position name="Ground_pos" x="0.000000000000000" y="0.000000000000000" z="-84.999499999999998" unit="m"/>
+			</physvol>
+			<physvol name="Pyramid">
+				<volumeref ref="Pyramid"/>
+				<position name="Pyramid_pos" x="0.000000000000000" y="0.000000000000000" z="9.250999999999999" unit="m"/>
 			</physvol>
 		</volume>
 	</structure>
