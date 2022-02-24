@@ -51,6 +51,40 @@ G4VPhysicalVolume* MUGDetectorConstruction::DefineGeometry() {
   return nullptr;
 }
 
+std::string MUGDetectorConstruction::GetGDMLFilePath(const std::string& filename) {
+
+  fs::path filepath(filename);
+  fs::path sel_filepath; // where the search result will be stored
+
+  MUGLog::OutFormat(MUGLog::detail, "Current working directory is '{}'",
+      fs::current_path().string());
+
+  // search the file in other possible locations (break at first search result)
+  for (const auto& p : fGDMLSearchPaths) {
+    try {
+      // std::filesystem::canonical will except if file does not exist
+      sel_filepath = fs::canonical(p/filepath);
+      break;
+    }
+    catch (const std::exception& ex) {
+      MUGLog::OutFormat(MUGLog::debug, "Tried '{}' but does not exist",
+          (p/filepath).string());
+    }
+  }
+
+  if (!fs::exists(sel_filepath)) {
+    MUGLog::OutFormat(MUGLog::fatal, "could not find and existing path for file '{}'",
+        filepath.string());
+  }
+  if (!fs::is_regular_file(sel_filepath)) {
+    MUGLog::OutFormat(MUGLog::fatal, "best candidate file '{}' is not a regular file",
+        sel_filepath.string());
+  }
+
+  MUGLog::OutFormat(MUGLog::debug, "Found '{}'", sel_filepath.string());
+  return sel_filepath;
+}
+
 G4VPhysicalVolume* MUGDetectorConstruction::Construct() {
 
   MUGLog::Out(MUGLog::debug, "Constructing detector");
@@ -60,9 +94,9 @@ G4VPhysicalVolume* MUGDetectorConstruction::Construct() {
     G4GDMLParser parser;
     parser.SetOverlapCheck(true);
     for (const auto& file : fGDMLFiles) {
-      MUGLog::Out(MUGLog::detail, "Reading ", file, " GDML file");
-      if (!fs::exists(fs::path(file.data()))) MUGLog::Out(MUGLog::fatal, file, " does not exist");
-      parser.Read(file, false);
+      auto abs_file = this->GetGDMLFilePath(file);
+      MUGLog::Out(MUGLog::detail, "Reading ", abs_file, " GDML file");
+      parser.Read(abs_file, false);
     }
     fWorld = parser.GetWorldVolume();
 

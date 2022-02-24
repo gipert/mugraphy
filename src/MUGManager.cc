@@ -43,9 +43,6 @@ MUGManager::MUGManager(int argc, char** argv) :
   gEnv->SetValue("Root.Stacktrace", 0);
 #endif
 
-  // FIXME: I don't like this here
-  // this->SetUpDefaultG4RunManager();
-
   this->DefineCommands();
 }
 
@@ -217,10 +214,6 @@ void MUGManager::SetRandSystemEntropySeed() {
 }
 
 void MUGManager::DefineCommands() {
-
-  // TODO: uncomment ranges once it's fixed in G4
-  // TODO: log level etc. are set via macro command too late, this->Initialize is skipped
-  // TODO: log level can be set via cmd line flag
 
   fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Manager/",
       "General commands for controlling the application");

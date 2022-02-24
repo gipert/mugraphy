@@ -41,11 +41,23 @@ class MUGDetectorConstruction : public G4VUserDetectorConstruction {
 
   private:
 
+    std::string GetGDMLFilePath(const std::string& name);
+    void DefineCommands();
+
     std::vector<std::string> fGDMLFiles;
+    // order matters!
+    std::vector<std::string> fGDMLSearchPaths = {
+      ".", // current directoy
+      "../share/mugraphy/gdml", // maybe we are using an installed version of mugraphy
+      "../../../src/geom", // or we have not installed it
+      "../../src/geom",
+      "../src/geom",
+      "../mugraphy/src/geom", // out-of-source build
+      "src/geom"
+    };
     std::unique_ptr<MUGMaterialTable> fMaterialTable;
     std::map<std::string, double> fPhysVolStepLimits;
     std::unique_ptr<G4GenericMessenger> fMessenger;
-    void DefineCommands();
 
     G4VPhysicalVolume* fWorld = nullptr;
     G4Region* fSensitiveRegion = new G4Region("SensitiveRegion");

@@ -1,7 +1,7 @@
 # /tracking/verbose 1
 
 /MUG/Manager/Logging/LogLevelScreen summary
-/MUG/Geometry/IncludeGDMLFile /home/gipert/sw/src/mugraphy/src/geom/geometry.gdml
+/MUG/Geometry/IncludeGDMLFile geometry.gdml
 /MUG/Output/FileName detector-hits.root
 
 # /MUG/Stacking/KillSecondaries false

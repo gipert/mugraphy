@@ -1,7 +1,7 @@
 # /MUG/Manager/Logging/LogLevelScreen debug
 # /MUG/Manager/Randomization/Seed 2
 
-/MUG/Geometry/IncludeGDMLFile /home/gipert/sw/src/mugraphy/src/geom/geometry.gdml
+/MUG/Geometry/IncludeGDMLFile geometry.gdml
 /MUG/Output/FileName detector-hits.root
 
 /run/initialize
