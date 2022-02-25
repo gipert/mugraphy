@@ -90,12 +90,13 @@ void MUGRunAction::BeginOfRunAction(const G4Run*) {
 
   if (fMUGGenerator) { fMUGGenerator->BeginOfRunAction(); }
 
+  // save start time for future
+  fMUGRun->SetStartTime(std::chrono::system_clock::now());
+
   if (this->IsMaster()) {
 
     // TODO: can I call MUGStackingAction::BeginOfRunAction here?
 
-    // save start time for future
-    fMUGRun->SetStartTime(std::chrono::system_clock::now());
     auto tt = fmt::localtime(fMUGRun->GetStartTime());
 
     MUGLog::OutFormat(MUGLog::summary, "Starting run nr. {:d}. Current local time is {:%d-%m-%Y %H:%M:%S}",

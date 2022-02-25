@@ -210,6 +210,7 @@ void MUGManager::SetRandSystemEntropySeed() {
   CLHEP::HepRandom::setTheSeed(rand_seed);
   MUGLog::Out(MUGLog::summary, "CLHEP::HepRandom seed set to: ", rand_seed);
 
+  // TODO: does this make sense?
   fIsRandControlled = true;
 }
 

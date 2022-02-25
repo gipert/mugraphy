@@ -30,8 +30,6 @@ void MUGEventAction::BeginOfEventAction(const G4Event* event) {
     auto current_run = dynamic_cast<const MUGRun*>(G4RunManager::GetRunManager()->GetCurrentRun());
     auto tot_events = current_run->GetNumberOfEventToBeProcessed();
 
-    // FIXME: elapsed time computation is broken in parallel mode
-
     auto start_time = current_run->GetStartTime();
     auto time_now = std::chrono::system_clock::now();
     auto tot_elapsed_s = std::chrono::duration_cast<std::chrono::seconds>(time_now - start_time).count();
