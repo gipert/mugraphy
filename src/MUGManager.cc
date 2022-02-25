@@ -119,8 +119,8 @@ void MUGManager::Run() {
     MUGLog::Out(MUGLog::summary, "Entering interactive mode");
     auto cval = std::getenv("DISPLAY");
     auto val = cval == nullptr ? std::string("") : std::string(cval);
-    if (val.empty()) MUGLog::Out(MUGLog::warning, "DISPLAY not set, forcing G4UI_USE_CSH=1");
-    session = std::make_unique<G4UIExecutive>(fArgc, fArgv, val.empty() ? "csh" : "");
+    if (val.empty()) MUGLog::Out(MUGLog::warning, "DISPLAY not set, forcing G4UI_USE_TCSH=1");
+    session = std::make_unique<G4UIExecutive>(fArgc, fArgv, val.empty() ? "tcsh" : "");
   }
 
   auto UI = G4UImanager::GetUIpointer();
