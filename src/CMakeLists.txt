@@ -70,3 +70,9 @@ configure_file(${CMAKE_SOURCE_DIR}/cmake/ProjectInfo.hh.in
     ${CMAKE_SOURCE_DIR}/include/ProjectInfo.hh @ONLY)
 
 install(TARGETS ${CMAKE_PROJECT_NAME})
+
+# install GDML files
+install(DIRECTORY geom/
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${CMAKE_PROJECT_NAME}
+    FILES_MATCHING PATTERN "*.gdml"
+    PATTERN "[_.]*" EXCLUDE) # exclude directories starting with '.' or '_'
