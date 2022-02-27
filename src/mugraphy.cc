@@ -7,7 +7,7 @@
 
 int main(int argc, char** argv) {
 
-    int verbosity = MUGLog::summary;
+    bool quiet = false, verbose = false, debug = false;
     std::string macro;
     int nthreads = 0;
     bool batch = false;
@@ -15,7 +15,9 @@ int main(int argc, char** argv) {
 
     CLI::App app{"mugraphy"};
     app.set_version_flag("--version", MUG_PROJECT_VERSION);
-    app.add_flag("-q{1}, -v{-2}", verbosity, " (default: summary info)");
+    app.add_flag("-v, --verbose", verbose, "increase verbosity");
+    app.add_flag("-q, --quiet", quiet, "decrease verbosity");
+    app.add_flag("--debug", debug, "maximum verbosity");
     app.add_flag("-p, --persistency", persistency, "");
     app.add_option("-t, --nthreads", nthreads, "number of CPU threads (default: max available)");
     auto macro_arg = app.add_option("macro", macro, "simulation macro file name");
@@ -23,15 +25,15 @@ int main(int argc, char** argv) {
 
     CLI11_PARSE(app, argc, argv);
 
-    // HACK: I have to do this +2 because CLI11 resets verbosity to 0
-    MUGLog::SetLogLevel(MUGLog::LogLevel(verbosity+2));
+    MUGLog::SetLogLevel(MUGLog::summary);
+    if (quiet) MUGLog::SetLogLevel(MUGLog::warning);
+    if (verbose) MUGLog::SetLogLevel(MUGLog::detail);
+    if (debug) MUGLog::SetLogLevel(MUGLog::debug);
 
     MUGManager manager(argc, argv);
     manager.EnablePersistency(persistency);
     manager.SetBatchMode(batch);
     manager.SetNThreads(nthreads);
-
-    // manager.GetManagementDetectorConstruction()->IncludeGDMLFile("gdml/main.gdml");
 
     if (!macro.empty()) manager.IncludeMacroFile(macro);
 
