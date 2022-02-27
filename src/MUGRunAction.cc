@@ -155,6 +155,10 @@ void MUGRunAction::EndOfRunAction(const G4Run*) {
 
     if (n_ev < 100) MUGLog::Out(MUGLog::warning, "Event processing time might be inaccurate");
   }
+
+  // reset print modulo
+  // TODO: if it's user specified, it shouldn't be reset
+  MUGManager::GetMUGManager()->SetPrintModulo(-1);
 }
 
 void MUGRunAction::DefineCommands() {}

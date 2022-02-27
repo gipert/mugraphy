@@ -118,12 +118,6 @@ G4VPhysicalVolume* MUGDetectorConstruction::Construct() {
     else vol->GetLogicalVolume()->SetUserLimits(new G4UserLimits(el.second));
   }
 
-  // TODO: decide what to do
-  // if (fWorld) fWorld->GetLogicalVolume()->SetVisAttributes(G4VisAttributes::GetInvisible());
-  auto att = new G4VisAttributes(G4Colour::Cyan());
-  att->SetForceWireframe(true);
-  if (fWorld) fWorld->GetLogicalVolume()->SetVisAttributes(att);
-
   // create sensitive region for special production cuts
   auto det_lv = MUGNavigationTools::FindLogicalVolume("Detector");
   det_lv->SetRegion(fSensitiveRegion);
