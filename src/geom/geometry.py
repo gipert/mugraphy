@@ -4,6 +4,11 @@ from pyg4ometry import gdml
 from pyg4ometry import visualisation as vis
 import numpy as np
 
+# resources:
+# - https://www.nature.com/articles/nature24647
+# - https://en.wikipedia.org/wiki/Great_Pyramid_of_Giza
+# - https://arxiv.org/abs/2202.07434
+
 enable_cavities = True
 enable_pyramid = True
 
@@ -85,17 +90,35 @@ if enable_cavities:
         geant4.PhysicalVolume([0, 0, 0], [-10.9, 4.7, 42.8 + king_cham_dz/2 + king_buff_z[i] + p_off, 'm'],
                               king_buff_l, 'KingChamberAirBuffer'+str(i), pyramid_l, reg)
 
+    # King's chamber hat
+    king_hat_s = geant4.solid.Trd('KingHat', 6.2, 0, king_cham_dy, king_cham_dy, 2.6, reg, lunit='m')
+    king_hat_l = geant4.LogicalVolume(king_hat_s, 'G4_AIR', 'KingHat', reg)
+    geant4.PhysicalVolume([0, 0, 0], [-10.9, 4.7, 42.8 + king_cham_dz/2 + 13.9 + p_off, 'm'],
+                          king_hat_l, 'KingHat', pyramid_l, reg)
+
+    # Shaft from Grand gallery to King's chamber 2.74
+    king_shaft_s = geant4.solid.Box('KingShaft', 6.9, 1.1, 1.1, reg, lunit='m')
+    king_shaft_l = geant4.LogicalVolume(king_shaft_s, 'G4_AIR', 'KingShaft', reg)
+    geant4.PhysicalVolume([0, 0, 0], [-4.8, 0, 40.5 + p_off, 'm'],
+                          king_shaft_l, 'KingShaft', pyramid_l, reg)
+
+    king_shaft2_s = geant4.solid.Box('KingShaft2', 2.9, 1.1, 2.74, reg, lunit='m')
+    king_shaft2_l = geant4.LogicalVolume(king_shaft2_s, 'G4_AIR', 'KingShaft2', reg)
+    geant4.PhysicalVolume([0, 0, 0], [-4.0, 0, 40.5 + 1.92 + eps + p_off, 'm'],
+                          king_shaft2_l, 'KingShaft2', pyramid_l, reg)
+
     # Grand gallery
     grand_gallery_slope = 26.7
     grand_gallery_s = geant4.solid.Para('GrandGallery', 47.2, 2.1, 7.7,
                                         0, -grand_gallery_slope*np.pi/180, 0,
                                         reg, lunit='m')
     grand_gallery_l = geant4.LogicalVolume(grand_gallery_s, 'G4_AIR', 'GrandGallery', reg)
-    geant4.PhysicalVolume([0, -grand_gallery_slope*np.pi/180, 0], [21.7, 0, 36.2 + p_off, 'm'],
+    geant4.PhysicalVolume([0, -grand_gallery_slope*np.pi/180, 0], [19.8, 0, 33.6 + p_off, 'm'],
                           grand_gallery_l, 'GrandGallery', pyramid_l, reg)
 
+
 # detector(s)
-det_s = geant4.solid.Box('Detector', 3, 3, 0.05, reg, 'm')
+det_s = geant4.solid.Box('Detector', 5.3-eps, 6.7-eps, 0.05, reg, 'm')
 det_l = geant4.LogicalVolume(det_s, 'G4_PHOTO_EMULSION', 'Detector', reg)
 
 if enable_cavities:
@@ -111,9 +134,9 @@ else:
 geant4.PhysicalVolume([0, 0, 0], queen_cham_floor, det_l,
                       'LowerPanel', mother, reg, copyNumber=0)
 
-queen_cham_floor[2] += 1
-geant4.PhysicalVolume([0, 0, 0], queen_cham_floor, det_l,
-                      'UpperPanel', mother, reg, copyNumber=1)
+# queen_cham_floor[2] += 1
+# geant4.PhysicalVolume([0, 0, 0], queen_cham_floor, det_l,
+#                       'UpperPanel', mother, reg, copyNumber=1)
 
 world_l.checkOverlaps(recursive=True)
 

@@ -70,8 +70,11 @@
 		<box name="KingChamberAirBuffer1" x="5.2" y="10.6" z="1.02" lunit="m"/>
 		<box name="KingChamberAirBuffer2" x="5.2" y="10.6" z="1.33" lunit="m"/>
 		<box name="KingChamberAirBuffer3" x="5.2" y="10.6" z="1.24" lunit="m"/>
+		<trd name="KingHat" x1="6.2" x2="0" y1="10.6" y2="10.6" z="2.6" lunit="m"/>
+		<box name="KingShaft" x="6.9" y="1.1" z="1.1" lunit="m"/>
+		<box name="KingShaft2" x="2.9" y="1.1" z="2.74" lunit="m"/>
 		<para name="GrandGallery" x="47.2" y="2.1" z="7.7" alpha="0" theta="-0.4660029102824859" phi="0" lunit="m" aunit="rad"/>
-		<box name="Detector" x="3" y="3" z="0.05" lunit="m"/>
+		<box name="Detector" x="5.2989999999999995" y="6.699" z="0.05" lunit="m"/>
 	</solids>
 	<structure>
 		<volume name="Ground">
@@ -88,10 +91,6 @@
 			<physvol name="LowerPanel">
 				<volumeref ref="Detector"/>
 				<position name="LowerPanel_pos" x="0.000000000000000" y="0.000000000000000" z="-2.275000000000000" unit="m"/>
-			</physvol>
-			<physvol name="UpperPanel" copynumber="1">
-				<volumeref ref="Detector"/>
-				<position name="UpperPanel_pos" x="0.000000000000000" y="0.000000000000000" z="-1.275000000000000" unit="m"/>
 			</physvol>
 		</volume>
 		<volume name="QueenHat">
@@ -117,6 +116,18 @@
 		<volume name="KingChamberAirBuffer3">
 			<materialref ref="G4_AIR"/>
 			<solidref ref="KingChamberAirBuffer3"/>
+		</volume>
+		<volume name="KingHat">
+			<materialref ref="G4_AIR"/>
+			<solidref ref="KingHat"/>
+		</volume>
+		<volume name="KingShaft">
+			<materialref ref="G4_AIR"/>
+			<solidref ref="KingShaft"/>
+		</volume>
+		<volume name="KingShaft2">
+			<materialref ref="G4_AIR"/>
+			<solidref ref="KingShaft2"/>
 		</volume>
 		<volume name="GrandGallery">
 			<materialref ref="G4_AIR"/>
@@ -153,9 +164,21 @@
 				<volumeref ref="KingChamberAirBuffer3"/>
 				<position name="KingChamberAirBuffer3_pos" x="-10.900000000000000" y="4.700000000000000" z="-12.939999999999998" unit="m"/>
 			</physvol>
+			<physvol name="KingHat">
+				<volumeref ref="KingHat"/>
+				<position name="KingHat_pos" x="-10.900000000000000" y="4.700000000000000" z="-9.700000000000003" unit="m"/>
+			</physvol>
+			<physvol name="KingShaft">
+				<volumeref ref="KingShaft"/>
+				<position name="KingShaft_pos" x="-4.800000000000000" y="0.000000000000000" z="-28.750000000000000" unit="m"/>
+			</physvol>
+			<physvol name="KingShaft2">
+				<volumeref ref="KingShaft2"/>
+				<position name="KingShaft2_pos" x="-4.000000000000000" y="0.000000000000000" z="-26.829000000000001" unit="m"/>
+			</physvol>
 			<physvol name="GrandGallery">
 				<volumeref ref="GrandGallery"/>
-				<position name="GrandGallery_pos" x="21.699999999999999" y="0.000000000000000" z="-33.049999999999997" unit="m"/>
+				<position name="GrandGallery_pos" x="19.800000000000001" y="0.000000000000000" z="-35.649999999999999" unit="m"/>
 				<rotation name="GrandGallery_rot" x="0.000000000000000" y="-0.466002910282486" z="0.000000000000000" unit="rad"/>
 			</physvol>
 		</volume>
