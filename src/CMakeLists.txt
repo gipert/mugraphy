@@ -20,7 +20,7 @@ set(PROJECT_PUBLIC_HEADERS
     ../include/MUGRun.hh
     ../include/MUGMaterialTable.hh
     ../include/MUGUIcmdStepLimit.hh
-    ../include/MUGProcessesList.hh
+    ../include/MUGPhysics.hh
     ../include/MUGTools.hh
     ../include/MUGTools.icc
 )
@@ -40,7 +40,7 @@ set(PROJECT_SOURCES
     MUGUserAction.cc
     MUGManager.cc
     MUGMaterialTable.cc
-    MUGProcessesList.cc
+    MUGPhysics.cc
     MUGUIcmdStepLimit.cc
     mugraphy.cc
 )

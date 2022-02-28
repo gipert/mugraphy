@@ -1,4 +1,4 @@
-#include "MUGProcessesList.hh"
+#include "MUGPhysics.hh"
 
 #include "G4ParticleTypes.hh"
 #include "G4RegionStore.hh"
@@ -20,7 +20,7 @@
 
 namespace u = CLHEP;
 
-MUGProcessesList::MUGProcessesList() :
+MUGPhysics::MUGPhysics() :
   G4VModularPhysicsList() {
 
   G4VModularPhysicsList::verboseLevel = 0;
@@ -65,8 +65,7 @@ MUGProcessesList::MUGProcessesList() :
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO: revise
-void MUGProcessesList::SetCuts() {
+void MUGPhysics::SetCuts() {
 
   MUGLog::Out(MUGLog::debug, "Setting particle cut values");
 
@@ -95,7 +94,7 @@ void MUGProcessesList::SetCuts() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void MUGProcessesList::DefineCommands() {
+void MUGPhysics::DefineCommands() {
 
   fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/Processes/",
       "Commands for controlling physics processes");

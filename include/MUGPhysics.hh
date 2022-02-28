@@ -9,16 +9,16 @@
 #include "globals.hh"
 
 class MUGProcessesMessenger;
-class MUGProcessesList : public G4VModularPhysicsList {
+class MUGPhysics : public G4VModularPhysicsList {
 
   public:
 
-    MUGProcessesList();
+    MUGPhysics();
 
-    MUGProcessesList           (MUGProcessesList const&) = delete;
-    MUGProcessesList& operator=(MUGProcessesList const&) = delete;
-    MUGProcessesList           (MUGProcessesList&&)      = delete;
-    MUGProcessesList& operator=(MUGProcessesList&&)      = delete;
+    MUGPhysics           (MUGPhysics const&) = delete;
+    MUGPhysics& operator=(MUGPhysics const&) = delete;
+    MUGPhysics           (MUGPhysics&&)      = delete;
+    MUGPhysics& operator=(MUGPhysics&&)      = delete;
 
     void SetCuts() override;
 

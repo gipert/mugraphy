@@ -21,7 +21,7 @@
 #include "Randomize.hh"
 
 #include "ProjectInfo.hh"
-#include "MUGProcessesList.hh"
+#include "MUGPhysics.hh"
 #include "MUGDetectorConstruction.hh"
 #include "MUGUserAction.hh"
 #include "MUGTools.hh"
@@ -79,7 +79,7 @@ void MUGManager::Initialize() {
   fG4RunManager->SetUserInitialization(fDetectorConstruction);
 
   MUGLog::Out(MUGLog::debug, "Initializing default processes list");
-  fProcessesList = new MUGProcessesList();
+  fProcessesList = new MUGPhysics();
   fG4RunManager->SetUserInitialization(fProcessesList);
 
   MUGLog::Out(MUGLog::debug, "Initializing default visualization manager");
