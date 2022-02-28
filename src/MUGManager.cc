@@ -79,8 +79,8 @@ void MUGManager::Initialize() {
   fG4RunManager->SetUserInitialization(fDetectorConstruction);
 
   MUGLog::Out(MUGLog::debug, "Initializing default processes list");
-  fProcessesList = new MUGPhysics();
-  fG4RunManager->SetUserInitialization(fProcessesList);
+  fPhysicsList = new MUGPhysics();
+  fG4RunManager->SetUserInitialization(fPhysicsList);
 
   MUGLog::Out(MUGLog::debug, "Initializing default visualization manager");
   fG4VisManager = std::make_unique<G4VisExecutive>("quiet");
@@ -148,7 +148,7 @@ MUGDetectorConstruction* MUGManager::GetDetectorConstruction() {
 }
 
 G4VUserPhysicsList* MUGManager::GetProcessesList() {
-  return fProcessesList;
+  return fPhysicsList;
 }
 
 void MUGManager::SetLogLevelScreen(std::string level) {

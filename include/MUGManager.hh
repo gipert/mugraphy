@@ -79,7 +79,7 @@ class MUGManager {
     std::unique_ptr<G4RunManager> fG4RunManager = nullptr;
     std::unique_ptr<G4VisManager> fG4VisManager = nullptr;
 
-    G4VUserPhysicsList* fProcessesList = nullptr;
+    G4VUserPhysicsList* fPhysicsList = nullptr;
     MUGDetectorConstruction* fDetectorConstruction = nullptr;
     MUGUserAction* fUserAction = nullptr;
 

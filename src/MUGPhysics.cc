@@ -23,7 +23,7 @@ namespace u = CLHEP;
 MUGPhysics::MUGPhysics() :
   G4VModularPhysicsList() {
 
-  G4VModularPhysicsList::verboseLevel = 0;
+  G4VModularPhysicsList::verboseLevel = MUGLog::GetLogLevelScreen() <= MUGLog::debug ? 1 : 0;
   this->SetVerboseLevel(G4VModularPhysicsList::verboseLevel);
 
   G4MuonMinus::Definition();
@@ -70,6 +70,7 @@ void MUGPhysics::SetCuts() {
   MUGLog::Out(MUGLog::debug, "Setting particle cut values");
 
   // default production thresholds for the world volume
+  // this should be enough since there are no dimensions smaller than 1 m
   this->SetDefaultCutValue(1*u::m);
 
   // Set different cuts for the sensitive region
@@ -82,8 +83,8 @@ void MUGPhysics::SetCuts() {
         MUGLog::OutFormat(MUGLog::debug, "Registering production cuts for region '{}'", region_name);
         auto cuts = region->GetProductionCuts();
         if (!cuts) cuts = new G4ProductionCuts;
-        cuts->SetProductionCut(1*u::cm, "mu-");
-        cuts->SetProductionCut(1*u::cm, "mu+");
+        cuts->SetProductionCut(1*u::mm, "mu-");
+        cuts->SetProductionCut(1*u::mm, "mu+");
         region->SetProductionCuts(cuts);
       }
       else MUGLog::OutFormat(MUGLog::warning, "Could not find region '{}' for production cuts settings",
