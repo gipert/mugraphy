@@ -7,3 +7,5 @@
 ![License](https://img.shields.io/github/license/gipert/mugraphy)
 
 Simulate the propagation of cosmic muons through large structures and reveal their internal composition. Inspired by [*Morishima et al. Nature (2017)*](https://www.nature.com/articles/nature24647).
+
+![Simulation visualization](.github/mugraphy.png)
