@@ -50,7 +50,7 @@ MUGPhysics::MUGPhysics() :
         G4HadronicParameters::Instance()->GetMinEnergyTransitionFTF_Cascade(),
         G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade()));
 
-  // Activate prodcuton of fission fragments in neutronHP
+  // Activate producton of fission fragments in neutronHP
   G4ParticleHPManager::GetInstance()->SetProduceFissionFragments(true);
 
   // Stopping Physics

@@ -31,9 +31,9 @@ MUGGenerator::MUGGenerator() {
 void MUGGenerator::BeginOfRunAction() {
 
   // NOTE: must match the GDML geometry
-  auto sky_height = 170 * u::m;
-  auto world_side = 330 * u::m;
-  auto ground_depth = 50 * u::m;
+  const auto sky_height = 170 * u::m;
+  const auto world_side = 330 * u::m;
+  const auto ground_depth = 50 * u::m;
 
   if (sky_height < world_side/2) {
     MUGLog::Out(MUGLog::fatal, "Sky is not high enough, it does not contain the full muon generation region");

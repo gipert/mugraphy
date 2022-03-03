@@ -83,16 +83,17 @@ endif()
 include(${Geant4_USE_FILE})
 
 option(MUG_USE_ROOT "Build ${CMAKE_PROJECT_NAME} with ROOT support" OFF)
+option(MUG_TESTS "Build test/validation suite" OFF)
 
 # Find ROOT
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
-find_package(ROOT ${MUG_ROOT_MINIMUM_VERSION} QUIET COMPONENTS Core Tree)
+find_package(ROOT ${MUG_ROOT_MINIMUM_VERSION} CONFIG QUIET COMPONENTS Core Tree Hist)
 if(ROOT_FOUND)
     message(STATUS "Found ROOT v" ${ROOT_VERSION} ", support enabled")
     list(APPEND mugraphy_components ROOT)
 else()
-    if(MUG_USE_ROOT)
-        find_package(ROOT ${MUG_ROOT_MINIMUM_VERSION} REQUIRED COMPONENTS Core Tree)
+    if(MUG_USE_ROOT OR MUG_TESTS)
+        find_package(ROOT ${MUG_ROOT_MINIMUM_VERSION} CONFIG REQUIRED COMPONENTS Core Tree Hist)
     else()
         message(STATUS "ROOT not found, support disabled")
     endif()
@@ -108,5 +109,9 @@ message(STATUS "CMAKE_CXX_STANDARD is c++" ${CMAKE_CXX_STANDARD})
 
 # all the code is located under src/
 add_subdirectory(src)
+
+if(MUG_TESTS)
+    add_subdirectory(tests)
+endif()
 
 message(STATUS "${CMAKE_PROJECT_NAME} install prefix set to ${CMAKE_INSTALL_PREFIX}")

@@ -1,61 +1,61 @@
 # List here manually all source files. Using GLOB is bad, see:
 # https://cmake.org/cmake/help/latest/command/file.html?highlight=Note#filesystem
 
+set(_root ${CMAKE_SOURCE_DIR})
+
 set(PROJECT_PUBLIC_HEADERS
-    ../include/MUGNavigationTools.hh
-    ../include/MUGGenerator.hh
-    ../include/MUGLog.hh
-    ../include/MUGLog.icc
-    ../include/ProjectInfo.hh
-    ../include/MUGDetectorConstruction.hh
-    ../include/MUGPanelHit.hh
-    ../include/MUGPanelSD.hh
-    ../include/MUGRunAction.hh
-    ../include/MUGEventAction.hh
-    ../include/MUGStackingAction.hh
-    ../include/MUGSteppingAction.hh
-    ../include/MUGTrackingAction.hh
-    ../include/MUGUserAction.hh
-    ../include/MUGManager.hh
-    ../include/MUGRun.hh
-    ../include/MUGMaterialTable.hh
-    ../include/MUGUIcmdStepLimit.hh
-    ../include/MUGPhysics.hh
-    ../include/MUGTools.hh
-    ../include/MUGTools.icc
+    ${_root}/include/MUGNavigationTools.hh
+    ${_root}/include/MUGGenerator.hh
+    ${_root}/include/MUGLog.hh
+    ${_root}/include/MUGLog.icc
+    ${_root}/include/ProjectInfo.hh
+    ${_root}/include/MUGDetectorConstruction.hh
+    ${_root}/include/MUGPanelHit.hh
+    ${_root}/include/MUGPanelSD.hh
+    ${_root}/include/MUGRunAction.hh
+    ${_root}/include/MUGEventAction.hh
+    ${_root}/include/MUGStackingAction.hh
+    ${_root}/include/MUGSteppingAction.hh
+    ${_root}/include/MUGTrackingAction.hh
+    ${_root}/include/MUGUserAction.hh
+    ${_root}/include/MUGManager.hh
+    ${_root}/include/MUGRun.hh
+    ${_root}/include/MUGMaterialTable.hh
+    ${_root}/include/MUGUIcmdStepLimit.hh
+    ${_root}/include/MUGPhysics.hh
+    ${_root}/include/MUGTools.hh
+    ${_root}/include/MUGTools.icc
 )
 
 set(PROJECT_SOURCES
-    MUGNavigationTools.cc
-    MUGGenerator.cc
-    MUGLog.cc
-    MUGDetectorConstruction.cc
-    MUGPanelHit.cc
-    MUGPanelSD.cc
-    MUGEventAction.cc
-    MUGRunAction.cc
-    MUGStackingAction.cc
-    MUGSteppingAction.cc
-    MUGTrackingAction.cc
-    MUGUserAction.cc
-    MUGManager.cc
-    MUGMaterialTable.cc
-    MUGPhysics.cc
-    MUGUIcmdStepLimit.cc
-    mugraphy.cc
+    ${_root}/src/MUGNavigationTools.cc
+    ${_root}/src/MUGGenerator.cc
+    ${_root}/src/MUGLog.cc
+    ${_root}/src/MUGDetectorConstruction.cc
+    ${_root}/src/MUGPanelHit.cc
+    ${_root}/src/MUGPanelSD.cc
+    ${_root}/src/MUGEventAction.cc
+    ${_root}/src/MUGRunAction.cc
+    ${_root}/src/MUGStackingAction.cc
+    ${_root}/src/MUGSteppingAction.cc
+    ${_root}/src/MUGTrackingAction.cc
+    ${_root}/src/MUGUserAction.cc
+    ${_root}/src/MUGManager.cc
+    ${_root}/src/MUGMaterialTable.cc
+    ${_root}/src/MUGPhysics.cc
+    ${_root}/src/MUGUIcmdStepLimit.cc
 )
 
-add_executable(${CMAKE_PROJECT_NAME} ${PROJECT_PUBLIC_HEADERS} ${PROJECT_SOURCES})
+add_executable(${CMAKE_PROJECT_NAME} ${PROJECT_PUBLIC_HEADERS}
+    ${PROJECT_SOURCES} ${CMAKE_PROJECT_NAME}.cc)
 
 # link against dependent libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
-    PUBLIC
-        ${Geant4_LIBRARIES})
+    PUBLIC ${Geant4_LIBRARIES})
 
 if(ROOT_FOUND)
     target_link_libraries(${CMAKE_PROJECT_NAME}
-        PUBLIC
-            ROOT::Core)
+        PUBLIC ROOT::Core ROOT::Tree ROOT::Hist)
 endif()
 
 # Ensure clients are aware of the minimum C++ standard we were compiled with
