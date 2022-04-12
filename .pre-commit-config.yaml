@@ -2,12 +2,14 @@ ci:
   autoupdate_commit_msg: "chore: update pre-commit hooks"
   autofix_commit_msg: "style: pre-commit fixes"
 
+exclude: ^include/(fmt|magic_enum|EcoMug|CLI11)/
+
+repos:
 - repo: https://github.com/psf/black
   rev: "22.3.0"
   hooks:
   - id: black
 
-repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.1.0
   hooks:
@@ -41,7 +43,6 @@ repos:
   hooks:
    - id: clang-format
      types_or: [c++]
-     exclude: ^include/(fmt|magic_enum|EcoMug|CLI11)/
 
 - repo: https://github.com/PyCQA/isort
   rev: "5.10.1"
