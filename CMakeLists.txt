@@ -34,7 +34,7 @@ set(CMAKE_INSTALL_LIBDIR lib)
 include(BuildType)
 
 # Find dependencies
-set(MUG_G4_MINIMUM_VERSION 10.7)
+set(MUG_G4_MINIMUM_VERSION 11)
 set(MUG_ROOT_MINIMUM_VERSION 6.06)
 
 # Find Geant4
