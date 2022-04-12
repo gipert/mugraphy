@@ -4,10 +4,10 @@
 #include <memory>
 #include <string>
 
+#include "CLHEP/Units/SystemOfUnits.h"
 #include "G4GenericMessenger.hh"
 #include "G4ParticleGun.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
-#include "CLHEP/Units/SystemOfUnits.h"
 
 #include "EcoMug/EcoMug.h"
 
@@ -25,12 +25,12 @@ class MUGGenerator : public G4VUserPrimaryGeneratorAction {
     MUGGenerator();
     ~MUGGenerator() = default;
 
-    MUGGenerator           (MUGGenerator const&) = delete;
+    MUGGenerator(MUGGenerator const&) = delete;
     MUGGenerator& operator=(MUGGenerator const&) = delete;
-    MUGGenerator           (MUGGenerator&&)      = delete;
-    MUGGenerator& operator=(MUGGenerator&&)      = delete;
+    MUGGenerator(MUGGenerator&&) = delete;
+    MUGGenerator& operator=(MUGGenerator&&) = delete;
 
-    void GeneratePrimaries(G4Event *event) override;
+    void GeneratePrimaries(G4Event* event) override;
     void BeginOfRunAction();
     inline void EndOfRunAction() {}
 
@@ -48,15 +48,15 @@ class MUGGenerator : public G4VUserPrimaryGeneratorAction {
 
     float fSpherePositionThetaMin = 0 * u::deg;
     float fSpherePositionThetaMax = 90 * u::deg;
-    float fSpherePositionPhiMin   = 0 * u::deg;
-    float fSpherePositionPhiMax   = 360 * u::deg;
+    float fSpherePositionPhiMin = 0 * u::deg;
+    float fSpherePositionPhiMax = 360 * u::deg;
 
     float fMomentumMin = 0 * u::GeV;
     float fMomentumMax = 1 * u::TeV;
-    float fThetaMin    = 0 * u::deg;
-    float fThetaMax    = 90 * u::deg;
-    float fPhiMin      = 0 * u::deg;
-    float fPhiMax      = 360 * u::deg;
+    float fThetaMin = 0 * u::deg;
+    float fThetaMax = 90 * u::deg;
+    float fPhiMin = 0 * u::deg;
+    float fPhiMax = 360 * u::deg;
 };
 
 #endif

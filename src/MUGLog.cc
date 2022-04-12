@@ -17,13 +17,13 @@
 #include <TROOT.h>
 #endif
 
-#include <iomanip>
-#include <unistd.h> // for isatty()
-#include <cstring>
-#include <cstdio>
-#include <cstdarg>
-#include <memory>
 #include <algorithm>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
+#include <iomanip>
+#include <memory>
+#include <unistd.h> // for isatty()
 
 std::ofstream MUGLog::fOutputFileStream;
 
@@ -39,16 +39,16 @@ std::string MUGLog::fVersion = MUG_PROJECT_VERSION;
 
 // initialize them at start of program - mandatory
 // so that even if user redirects, we've got a copy
-std::streambuf const *coutbuf = G4cout.rdbuf();
-std::streambuf const *cerrbuf = G4cerr.rdbuf();
+std::streambuf const* coutbuf = G4cout.rdbuf();
+std::streambuf const* cerrbuf = G4cerr.rdbuf();
 
 // ---------------------------------------------------------
 
 MUGLog::MUGLog() {
 
 #if MUG_HAS_ROOT
-    // suppress the ROOT Info printouts
-    gErrorIgnoreLevel = 2000;
+  // suppress the ROOT Info printouts
+  gErrorIgnoreLevel = 2000;
 #endif
 }
 
@@ -57,67 +57,59 @@ MUGLog::MUGLog() {
 void MUGLog::OpenLogFile(const std::string& filename) {
 
 #if MUG_HAS_ROOT
-    // suppress the ROOT Info printouts
-    gErrorIgnoreLevel = 2000;
+  // suppress the ROOT Info printouts
+  gErrorIgnoreLevel = 2000;
 #endif
 
-    // first close and flush and existing log file
-    CloseLog();
+  // first close and flush and existing log file
+  CloseLog();
 
-    // open log file
-    MUGLog::fOutputFileStream.open(filename.data());
+  // open log file
+  MUGLog::fOutputFileStream.open(filename.data());
 
-    if (!MUGLog::fOutputFileStream.is_open()) {
-        G4cerr << " Could not open log file " << filename << ". " << G4endl;
-        return;
-    }
+  if (!MUGLog::fOutputFileStream.is_open()) {
+    G4cerr << " Could not open log file " << filename << ". " << G4endl;
+    return;
+  }
 
-    MUGLog::Out(MUGLog::summary, MUGLog::summary, "Opening logfile " + filename);
+  MUGLog::Out(MUGLog::summary, MUGLog::summary, "Opening logfile " + filename);
 }
 
 // ---------------------------------------------------------
 
 void MUGLog::StartupInfo() {
 
-    std::string message = "";
+  std::string message = "";
 
-    message += "\n";
-    message += "   _ _     _  __  _  /_\n";
-    message += "  / / //_//_///_|/_// //_/  v" + MUGLog::fVersion + "\n";
-    message += "          _/    /      _/\n";
+  message += "\n";
+  message += "   _ _     _  __  _  /_\n";
+  message += "  / / //_//_///_|/_// //_/  v" + MUGLog::fVersion + "\n";
+  message += "          _/    /      _/\n";
 
-    // write message to screen
-    if (MUGLog::fMinimumLogLevelScreen < MUGLog::nothing)
-        G4cout << message << G4endl;
+  // write message to screen
+  if (MUGLog::fMinimumLogLevelScreen < MUGLog::nothing) G4cout << message << G4endl;
 
-    if (MUGLog::IsOpen() && MUGLog::fMinimumLogLevelFile < MUGLog::nothing)
-        MUGLog::fOutputFileStream << message;
+  if (MUGLog::IsOpen() && MUGLog::fMinimumLogLevelFile < MUGLog::nothing)
+    MUGLog::fOutputFileStream << message;
 
-    fFirstOutputDone = true;
+  fFirstOutputDone = true;
 }
 
 // ---------------------------------------------------------
 
 std::string MUGLog::GetPrefix(MUGLog::LogLevel loglevel, std::ostream& os) {
 
-    if (!fUsePrefix) return "";
+  if (!fUsePrefix) return "";
 
-    switch (loglevel) {
-        case debug:
-            return Colorize<MUGLog::Ansi::magenta>("[Debug ---> ", os);
-        case detail:
-            return Colorize<MUGLog::Ansi::blue>   ("[Detail --> ", os);
-        case summary:
-            return Colorize<MUGLog::Ansi::green>  ("[Summary -> ", os);
-        case warning:
-            return Colorize<MUGLog::Ansi::yellow> ("[Warning -> ", os);
-        case error:
-            return Colorize<MUGLog::Ansi::red>    ("[Error ---> ", os);
-        case fatal:
-            return Colorize<MUGLog::Ansi::red>    ("[Fatal ---> ", os, true);
-        default:
-            return "";
-    }
+  switch (loglevel) {
+    case debug: return Colorize<MUGLog::Ansi::magenta>("[Debug ---> ", os);
+    case detail: return Colorize<MUGLog::Ansi::blue>("[Detail --> ", os);
+    case summary: return Colorize<MUGLog::Ansi::green>("[Summary -> ", os);
+    case warning: return Colorize<MUGLog::Ansi::yellow>("[Warning -> ", os);
+    case error: return Colorize<MUGLog::Ansi::red>("[Error ---> ", os);
+    case fatal: return Colorize<MUGLog::Ansi::red>("[Fatal ---> ", os, true);
+    default: return "";
+  }
 }
 
 // https://github.com/agauniyal/rang/blob/master/include/rang.hpp
@@ -128,27 +120,22 @@ bool MUGLog::SupportsColors(const std::ostream& os) {
   FILE* the_stream = nullptr;
   if (osbuf == coutbuf) {
     the_stream = stdout;
-  }
-  else if (osbuf == cerrbuf) {
+  } else if (osbuf == cerrbuf) {
     the_stream = stderr;
-  }
-  else return false;
+  } else return false;
 
   // check that we are on a tty
   if (!::isatty(::fileno(the_stream))) return false;
 
   // check the value of the TERM variable
-  const char* terms[] = {
-    "ansi", "color", "console", "cygwin", "gnome",
-    "konsole", "kterm", "linux", "msys", "putty",
-    "rxvt", "screen", "vt100", "xterm"
-  };
+  const char* terms[] = {"ansi", "color", "console", "cygwin", "gnome", "konsole", "kterm", "linux",
+      "msys", "putty", "rxvt", "screen", "vt100", "xterm"};
 
   auto env_p = std::getenv("TERM");
   if (env_p == nullptr) return false;
 
   return std::any_of(std::begin(terms), std::end(terms),
-    [&](const char *term) { return ::strstr(env_p, term) != nullptr; });
+      [&](const char* term) { return ::strstr(env_p, term) != nullptr; });
 }
 
 // vim: tabstop=2 shiftwidth=2 expandtab

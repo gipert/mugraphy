@@ -5,10 +5,10 @@
 #include <memory>
 #include <vector>
 
-#include "globals.hh"
-#include "G4VUserDetectorConstruction.hh"
-#include "G4Region.hh"
 #include "G4Cache.hh"
+#include "G4Region.hh"
+#include "G4VUserDetectorConstruction.hh"
+#include "globals.hh"
 
 #include "MUGMaterialTable.hh"
 #include "MUGNavigationTools.hh"
@@ -23,10 +23,10 @@ class MUGDetectorConstruction : public G4VUserDetectorConstruction {
     MUGDetectorConstruction();
     ~MUGDetectorConstruction() = default;
 
-    MUGDetectorConstruction           (MUGDetectorConstruction const&) = delete;
+    MUGDetectorConstruction(MUGDetectorConstruction const&) = delete;
     MUGDetectorConstruction& operator=(MUGDetectorConstruction const&) = delete;
-    MUGDetectorConstruction           (MUGDetectorConstruction&&)      = delete;
-    MUGDetectorConstruction& operator=(MUGDetectorConstruction&&)      = delete;
+    MUGDetectorConstruction(MUGDetectorConstruction&&) = delete;
+    MUGDetectorConstruction& operator=(MUGDetectorConstruction&&) = delete;
 
     G4VPhysicalVolume* Construct() override;
     void ConstructSDandField() override;
@@ -46,15 +46,12 @@ class MUGDetectorConstruction : public G4VUserDetectorConstruction {
 
     std::vector<std::string> fGDMLFiles;
     // order matters!
-    std::vector<std::string> fGDMLSearchPaths = {
-      ".", // current directoy
-      "../share/mugraphy/gdml", // maybe we are using an installed version of mugraphy
-      "../../../src/geom", // or we have not installed it
-      "../../src/geom",
-      "../src/geom",
-      "../mugraphy/src/geom", // out-of-source build
-      "src/geom"
-    };
+    std::vector<std::string> fGDMLSearchPaths = {".", // current directory
+        "../share/mugraphy/gdml", // maybe we are using an installed version of mugraphy
+        "../../../src/geom",      // or we have not installed it
+        "../../src/geom", "../src/geom",
+        "../mugraphy/src/geom", // out-of-source build
+        "src/geom"};
     std::unique_ptr<MUGMaterialTable> fMaterialTable;
     std::map<std::string, double> fPhysVolStepLimits;
     std::unique_ptr<G4GenericMessenger> fMessenger;

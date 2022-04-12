@@ -1,20 +1,20 @@
 #include "MUGRunAction.hh"
 
-#include <limits>
-#include <ctime>
 #include <cstdlib>
+#include <ctime>
+#include <limits>
 
+#include "G4AccumulableManager.hh"
+#include "G4AnalysisManager.hh"
 #include "G4GenericMessenger.hh"
 #include "G4Run.hh"
 #include "G4RunManager.hh"
-#include "G4AnalysisManager.hh"
-#include "G4AccumulableManager.hh"
 
-#include "MUGRun.hh"
+#include "MUGEventAction.hh"
+#include "MUGGenerator.hh"
 #include "MUGLog.hh"
 #include "MUGManager.hh"
-#include "MUGGenerator.hh"
-#include "MUGEventAction.hh"
+#include "MUGRun.hh"
 
 #include "fmt/chrono.h"
 
@@ -23,8 +23,7 @@ G4Run* MUGRunAction::GenerateRun() {
   return fMUGRun;
 }
 
-MUGRunAction::MUGRunAction(bool persistency) :
-  fIsPersistencyEnabled(persistency) {
+MUGRunAction::MUGRunAction(bool persistency) : fIsPersistencyEnabled(persistency) {
 
   this->DefineCommands();
   if (fIsPersistencyEnabled) { this->SetupAnalysisManager(); }
@@ -32,9 +31,8 @@ MUGRunAction::MUGRunAction(bool persistency) :
   G4AccumulableManager::Instance()->RegisterAccumulable(fTotalHits);
 }
 
-MUGRunAction::MUGRunAction(MUGGenerator* gene, bool persistency) :
-  fMUGGenerator(gene),
-  fIsPersistencyEnabled(persistency) {
+MUGRunAction::MUGRunAction(MUGGenerator* gene, bool persistency)
+    : fMUGGenerator(gene), fIsPersistencyEnabled(persistency) {
 
   this->DefineCommands();
   if (fIsPersistencyEnabled) { this->SetupAnalysisManager(); }
@@ -59,13 +57,13 @@ void MUGRunAction::SetupAnalysisManager() {
 
   // create tuples
   ana_man->CreateNtuple("ntuples", "Event information");
-  ana_man->CreateNtupleIColumn("panel",  fPanelNr);
+  ana_man->CreateNtupleIColumn("panel", fPanelNr);
   ana_man->CreateNtupleFColumn("energy", fEdep);
-  ana_man->CreateNtupleFColumn("xhit",   fXHit);
-  ana_man->CreateNtupleFColumn("yhit",   fYHit);
-  ana_man->CreateNtupleFColumn("zhit",   fZHit);
-  ana_man->CreateNtupleFColumn("theta",  fTheta);
-  ana_man->CreateNtupleFColumn("phi",    fPhi);
+  ana_man->CreateNtupleFColumn("xhit", fXHit);
+  ana_man->CreateNtupleFColumn("yhit", fYHit);
+  ana_man->CreateNtupleFColumn("zhit", fZHit);
+  ana_man->CreateNtupleFColumn("theta", fTheta);
+  ana_man->CreateNtupleFColumn("phi", fPhi);
   ana_man->FinishNtuple();
 }
 
@@ -80,11 +78,10 @@ void MUGRunAction::BeginOfRunAction(const G4Run*) {
   if (fIsPersistencyEnabled) {
     auto ana_man = G4AnalysisManager::Instance();
     // TODO: realpath
-    if (this->IsMaster()) MUGLog::Out(MUGLog::summary, "Opening output file: ",
-        manager->GetOutputFileName());
+    if (this->IsMaster())
+      MUGLog::Out(MUGLog::summary, "Opening output file: ", manager->GetOutputFileName());
     ana_man->OpenFile(manager->GetOutputFileName());
-  }
-  else {
+  } else {
     if (this->IsMaster()) MUGLog::Out(MUGLog::warning, "Object persistency disabled");
   }
 
@@ -99,15 +96,16 @@ void MUGRunAction::BeginOfRunAction(const G4Run*) {
 
     auto tt = fmt::localtime(fMUGRun->GetStartTime());
 
-    MUGLog::OutFormat(MUGLog::summary, "Starting run nr. {:d}. Current local time is {:%d-%m-%Y %H:%M:%S}",
-        fMUGRun->GetRunID(), tt);
+    MUGLog::OutFormat(MUGLog::summary,
+        "Starting run nr. {:d}. Current local time is {:%d-%m-%Y %H:%M:%S}", fMUGRun->GetRunID(), tt);
     MUGLog::OutFormat(MUGLog::summary, "Number of events to be processed: {:d}",
         fMUGRun->GetNumberOfEventToBeProcessed());
   }
 
   auto g4manager = G4RunManager::GetRunManager();
   auto tot_events = g4manager->GetNumberOfEventsToBeProcessed();
-  if (manager->GetPrintModulo() <= 0 and tot_events >= 100) manager->SetPrintModulo(tot_events/10);
+  if (manager->GetPrintModulo() <= 0 and tot_events >= 100)
+    manager->SetPrintModulo(tot_events / 10);
   else if (tot_events < 100) manager->SetPrintModulo(100);
 }
 
@@ -128,28 +126,35 @@ void MUGRunAction::EndOfRunAction(const G4Run*) {
   if (this->IsMaster()) {
     auto time_now = std::chrono::system_clock::now();
 
-    MUGLog::OutFormat(MUGLog::summary, "Run nr. {:d} completed. {:d} events simulated. Current local time is {:%d-%m-%Y %H:%M:%S}",
+    MUGLog::OutFormat(MUGLog::summary,
+        "Run nr. {:d} completed. {:d} events simulated. Current local time is {:%d-%m-%Y %H:%M:%S}",
         fMUGRun->GetRunID(), fMUGRun->GetNumberOfEventToBeProcessed(), fmt::localtime(time_now));
 
     auto start_time = fMUGRun->GetStartTime();
-    auto tot_elapsed_s = std::chrono::duration_cast<std::chrono::seconds>(time_now - start_time).count();
+    auto tot_elapsed_s =
+        std::chrono::duration_cast<std::chrono::seconds>(time_now - start_time).count();
     long partial = 0;
-    long elapsed_d = (tot_elapsed_s - partial) / 86400; partial += elapsed_d * 86400;
-    long elapsed_h = (tot_elapsed_s - partial) / 3600;  partial += elapsed_h * 3600;
-    long elapsed_m = (tot_elapsed_s - partial) / 60;    partial += elapsed_m * 60;
+    long elapsed_d = (tot_elapsed_s - partial) / 86400;
+    partial += elapsed_d * 86400;
+    long elapsed_h = (tot_elapsed_s - partial) / 3600;
+    partial += elapsed_h * 3600;
+    long elapsed_m = (tot_elapsed_s - partial) / 60;
+    partial += elapsed_m * 60;
     long elapsed_s = tot_elapsed_s - partial;
 
     MUGLog::OutFormat(MUGLog::summary, "Stats: {:d} detector hits, detection efficiency = {:.5g}",
-        fTotalHits.GetValue(), fTotalHits.GetValue()*1./fMUGRun->GetNumberOfEventToBeProcessed());
+        fTotalHits.GetValue(), fTotalHits.GetValue() * 1. / fMUGRun->GetNumberOfEventToBeProcessed());
 
-    MUGLog::OutFormat(MUGLog::summary, "Stats: run time was {:d} days, {:d} hours, {:d} minutes and {:d} seconds",
-        elapsed_d, elapsed_h, elapsed_m, elapsed_s);
+    MUGLog::OutFormat(MUGLog::summary,
+        "Stats: run time was {:d} days, {:d} hours, {:d} minutes and {:d} seconds", elapsed_d,
+        elapsed_h, elapsed_m, elapsed_s);
 
     auto total_sec_hres = std::chrono::duration<double>(time_now - fMUGRun->GetStartTime()).count();
 
     double n_ev = fMUGRun->GetNumberOfEvent();
-    MUGLog::OutFormat(MUGLog::summary, "Stats: average event processing time was {:.5g} seconds/event = {:.5g} events/second",
-        total_sec_hres/n_ev, n_ev/total_sec_hres);
+    MUGLog::OutFormat(MUGLog::summary,
+        "Stats: average event processing time was {:.5g} seconds/event = {:.5g} events/second",
+        total_sec_hres / n_ev, n_ev / total_sec_hres);
 
     if (n_ev < 100) MUGLog::Out(MUGLog::warning, "Event processing time might be inaccurate");
   }

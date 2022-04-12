@@ -1,20 +1,18 @@
 #ifndef _MUG_TOOLS_HH_
 #define _MUG_TOOLS_HH_
 
-#include <memory>
-#include <vector>
-#include <utility>
-#include <ctime>
 #include <chrono>
+#include <ctime>
+#include <memory>
+#include <utility>
+#include <vector>
 
 namespace MUGTools {
 
-  template <typename T>
-  T ToEnum(std::string);
+  template<typename T> T ToEnum(std::string);
 
-  template <typename T>
-  std::string GetCandidates();
-}
+  template<typename T> std::string GetCandidates();
+} // namespace MUGTools
 
 #include "MUGTools.icc"
 

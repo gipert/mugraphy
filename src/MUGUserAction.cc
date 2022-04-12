@@ -1,12 +1,12 @@
 #include "MUGUserAction.hh"
 
-#include "MUGManager.hh"
-#include "MUGGenerator.hh"
-#include "MUGRunAction.hh"
 #include "MUGEventAction.hh"
+#include "MUGGenerator.hh"
+#include "MUGManager.hh"
+#include "MUGRunAction.hh"
 #include "MUGStackingAction.hh"
-#include "MUGTrackingAction.hh"
 #include "MUGSteppingAction.hh"
+#include "MUGTrackingAction.hh"
 
 void MUGUserAction::BuildForMaster() const {
 
@@ -17,7 +17,8 @@ void MUGUserAction::BuildForMaster() const {
 void MUGUserAction::Build() const {
 
   auto generator_primary = new MUGGenerator();
-  auto run_action = new MUGRunAction(generator_primary, MUGManager::GetMUGManager()->IsPersistencyEnabled());
+  auto run_action =
+      new MUGRunAction(generator_primary, MUGManager::GetMUGManager()->IsPersistencyEnabled());
   auto event_action = new MUGEventAction(run_action);
 
   this->SetUserAction(generator_primary);

@@ -5,8 +5,8 @@
 
 #include "MUGUIcmdStepLimit.hh"
 
-MUGUIcmdStepLimit::MUGUIcmdStepLimit(std::string command_path, G4UImessenger* aMessenger):
-  G4UIcommand(G4String(command_path), aMessenger) {
+MUGUIcmdStepLimit::MUGUIcmdStepLimit(std::string command_path, G4UImessenger* aMessenger)
+    : G4UIcommand(G4String(command_path), aMessenger) {
 
   auto particle_par = new G4UIparameter('s');
   this->SetParameter(particle_par);
@@ -37,7 +37,7 @@ double MUGUIcmdStepLimit::GetStepSize(std::string par_string) {
   std::istringstream is(par_string);
   is >> particle >> volume >> value >> units;
 
-  return value*this->ValueOf(G4String(units));
+  return value * this->ValueOf(G4String(units));
 }
 
 std::string MUGUIcmdStepLimit::GetParticleName(std::string par_string) {

@@ -16,10 +16,10 @@ class MUGEventAction : public G4UserEventAction {
     MUGEventAction(MUGRunAction*);
     inline ~MUGEventAction() = default;
 
-    MUGEventAction           (MUGEventAction const&) = delete;
+    MUGEventAction(MUGEventAction const&) = delete;
     MUGEventAction& operator=(MUGEventAction const&) = delete;
-    MUGEventAction           (MUGEventAction&&)      = delete;
-    MUGEventAction& operator=(MUGEventAction&&)      = delete;
+    MUGEventAction(MUGEventAction&&) = delete;
+    MUGEventAction& operator=(MUGEventAction&&) = delete;
 
     void BeginOfEventAction(const G4Event*) override;
     void EndOfEventAction(const G4Event*) override;

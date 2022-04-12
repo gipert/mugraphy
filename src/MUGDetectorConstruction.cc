@@ -3,41 +3,41 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+#include "CLHEP/Units/SystemOfUnits.h"
 #include "G4GDMLParser.hh"
-#include "G4UserLimits.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4PhysicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4PVPlacement.hh"
+#include "G4PhysicalVolumeStore.hh"
 #include "G4Region.hh"
-#include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
 #include "G4Transform3D.hh"
+#include "G4UserLimits.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4VisAttributes.hh"
-#include "CLHEP/Units/SystemOfUnits.h"
 
 #include "G4Box.hh"
-#include "G4Tubs.hh"
 #include "G4Cons.hh"
-#include "G4Para.hh"
-#include "G4Trd.hh"
-#include "G4Trap.hh"
-#include "G4GenericTrap.hh"
-#include "G4Sphere.hh"
-#include "G4Orb.hh"
-#include "G4Polycone.hh"
 #include "G4GenericPolycone.hh"
-#include "G4Tet.hh"
-#include "G4UnionSolid.hh"
+#include "G4GenericTrap.hh"
 #include "G4IntersectionSolid.hh"
+#include "G4Orb.hh"
+#include "G4Para.hh"
+#include "G4Polycone.hh"
+#include "G4Sphere.hh"
 #include "G4SubtractionSolid.hh"
+#include "G4Tet.hh"
+#include "G4Trap.hh"
+#include "G4Trd.hh"
+#include "G4Tubs.hh"
+#include "G4UnionSolid.hh"
 
-#include "MUGMaterialTable.hh"
+#include "G4SDManager.hh"
 #include "MUGLog.hh"
+#include "MUGMaterialTable.hh"
 #include "MUGNavigationTools.hh"
 #include "MUGPanelSD.hh"
-#include "G4SDManager.hh"
 
 namespace u = CLHEP;
 
@@ -47,28 +47,23 @@ MUGDetectorConstruction::MUGDetectorConstruction() {
   this->DefineCommands();
 }
 
-G4VPhysicalVolume* MUGDetectorConstruction::DefineGeometry() {
-  return nullptr;
-}
+G4VPhysicalVolume* MUGDetectorConstruction::DefineGeometry() { return nullptr; }
 
 std::string MUGDetectorConstruction::GetGDMLFilePath(const std::string& filename) {
 
   fs::path filepath(filename);
   fs::path sel_filepath; // where the search result will be stored
 
-  MUGLog::OutFormat(MUGLog::detail, "Current working directory is '{}'",
-      fs::current_path().string());
+  MUGLog::OutFormat(MUGLog::detail, "Current working directory is '{}'", fs::current_path().string());
 
   // search the file in other possible locations (break at first search result)
   for (const auto& p : fGDMLSearchPaths) {
     try {
       // std::filesystem::canonical will except if file does not exist
-      sel_filepath = fs::canonical(p/filepath);
+      sel_filepath = fs::canonical(p / filepath);
       break;
-    }
-    catch (const std::exception& ex) {
-      MUGLog::OutFormat(MUGLog::debug, "Tried '{}' but does not exist",
-          (p/filepath).string());
+    } catch (const std::exception& ex) {
+      MUGLog::OutFormat(MUGLog::debug, "Tried '{}' but does not exist", (p / filepath).string());
     }
   }
 
@@ -102,20 +97,20 @@ G4VPhysicalVolume* MUGDetectorConstruction::Construct() {
 
     // TODO: does this make sense?
     this->DefineGeometry();
-  }
-  else {
+  } else {
     fWorld = this->DefineGeometry();
-    if (!fWorld) MUGLog::Out(MUGLog::fatal, "DefineGeometry() returned nullptr. ",
-        "Did you forget to reimplement the base class method?");
+    if (!fWorld)
+      MUGLog::Out(MUGLog::fatal, "DefineGeometry() returned nullptr. ",
+          "Did you forget to reimplement the base class method?");
   }
 
   for (const auto& el : fPhysVolStepLimits) {
-    MUGLog::OutFormat(MUGLog::debug, "Setting max user step size for volume '{}' to {}", el.first, el.second);
+    MUGLog::OutFormat(MUGLog::debug, "Setting max user step size for volume '{}' to {}", el.first,
+        el.second);
     auto vol = MUGNavigationTools::FindPhysicalVolume(el.first);
     if (!vol) {
       MUGLog::Out(MUGLog::error, "Returned volume is null, skipping user step limit setting");
-    }
-    else vol->GetLogicalVolume()->SetUserLimits(new G4UserLimits(el.second));
+    } else vol->GetLogicalVolume()->SetUserLimits(new G4UserLimits(el.second));
   }
 
   // create sensitive region for special production cuts
@@ -143,17 +138,20 @@ void MUGDetectorConstruction::DefineCommands() {
       "Commands for controlling geometry definitions");
 
   fMessenger->DeclareMethod("IncludeGDMLFile", &MUGDetectorConstruction::IncludeGDMLFile)
-    .SetGuidance("Use GDML file for geometry definition")
-    .SetParameterName("filename", false)
-    .SetStates(G4State_PreInit);
+      .SetGuidance("Use GDML file for geometry definition")
+      .SetParameterName("filename", false)
+      .SetStates(G4State_PreInit);
 
-  fMessenger->DeclareMethod("PrintListOfLogicalVolumes", &MUGDetectorConstruction::PrintListOfLogicalVolumes)
-    .SetGuidance("Print list of defined physical volumes")
-    .SetStates(G4State_Idle);
+  fMessenger
+      ->DeclareMethod("PrintListOfLogicalVolumes", &MUGDetectorConstruction::PrintListOfLogicalVolumes)
+      .SetGuidance("Print list of defined physical volumes")
+      .SetStates(G4State_Idle);
 
-  fMessenger->DeclareMethod("PrintListOfPhysicalVolumes", &MUGDetectorConstruction::PrintListOfPhysicalVolumes)
-    .SetGuidance("Print list of defined physical volumes")
-    .SetStates(G4State_Idle);
+  fMessenger
+      ->DeclareMethod("PrintListOfPhysicalVolumes",
+          &MUGDetectorConstruction::PrintListOfPhysicalVolumes)
+      .SetGuidance("Print list of defined physical volumes")
+      .SetStates(G4State_Idle);
 }
 
 // vim: tabstop=2 shiftwidth=2 expandtab

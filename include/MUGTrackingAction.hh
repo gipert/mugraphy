@@ -11,14 +11,16 @@ class MUGTrackingAction : public G4UserTrackingAction {
     MUGTrackingAction(MUGEventAction*);
     ~MUGTrackingAction() = default;
 
-    MUGTrackingAction           (MUGTrackingAction const&) = delete;
+    MUGTrackingAction(MUGTrackingAction const&) = delete;
     MUGTrackingAction& operator=(MUGTrackingAction const&) = delete;
-    MUGTrackingAction           (MUGTrackingAction&&)      = delete;
-    MUGTrackingAction& operator=(MUGTrackingAction&&)      = delete;
+    MUGTrackingAction(MUGTrackingAction&&) = delete;
+    MUGTrackingAction& operator=(MUGTrackingAction&&) = delete;
 
     virtual void PreUserTrackingAction(const G4Track*) override;
     virtual void PostUserTrackingAction(const G4Track*) override;
-    inline G4TrackingManager* GetTrackingManager() { return G4UserTrackingAction::fpTrackingManager; };
+    inline G4TrackingManager* GetTrackingManager() {
+      return G4UserTrackingAction::fpTrackingManager;
+    };
 
   private:
 

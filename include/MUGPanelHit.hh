@@ -3,10 +3,10 @@
 
 #include <memory>
 
-#include "G4VHit.hh"
+#include "G4Allocator.hh"
 #include "G4THitsCollection.hh"
 #include "G4ThreeVector.hh"
-#include "G4Allocator.hh"
+#include "G4VHit.hh"
 
 class MUGPanelHit : public G4VHit {
 
@@ -15,15 +15,15 @@ class MUGPanelHit : public G4VHit {
     MUGPanelHit() = default;
     ~MUGPanelHit() = default;
 
-    MUGPanelHit           (MUGPanelHit const&) = delete;
+    MUGPanelHit(MUGPanelHit const&) = delete;
     MUGPanelHit& operator=(MUGPanelHit const&) = delete;
-    MUGPanelHit           (MUGPanelHit&&)      = delete;
-    MUGPanelHit& operator=(MUGPanelHit&&)      = delete;
+    MUGPanelHit(MUGPanelHit&&) = delete;
+    MUGPanelHit& operator=(MUGPanelHit&&) = delete;
 
     bool operator==(const MUGPanelHit&) const;
 
     inline void* operator new(size_t);
-    inline void  operator delete(void*);
+    inline void operator delete(void*);
 
     inline bool IsInitialized() { return fIsInitialized; }
 
@@ -52,13 +52,12 @@ typedef G4THitsCollection<MUGPanelHit> MUGPanelHitsCollection;
 extern G4ThreadLocal G4Allocator<MUGPanelHit>* MUGPanelHitAllocator;
 
 inline void* MUGPanelHit::operator new(size_t) {
-  if(!MUGPanelHitAllocator)
-      MUGPanelHitAllocator = new G4Allocator<MUGPanelHit>;
-  return (void *) MUGPanelHitAllocator->MallocSingle();
+  if (!MUGPanelHitAllocator) MUGPanelHitAllocator = new G4Allocator<MUGPanelHit>;
+  return (void*)MUGPanelHitAllocator->MallocSingle();
 }
 
-inline void MUGPanelHit::operator delete(void *hit) {
-  MUGPanelHitAllocator->FreeSingle((MUGPanelHit*) hit);
+inline void MUGPanelHit::operator delete(void* hit) {
+  MUGPanelHitAllocator->FreeSingle((MUGPanelHit*)hit);
 }
 
 #endif

@@ -24,10 +24,10 @@ class MUGManager {
     MUGManager(int argc, char** argv);
     ~MUGManager();
 
-    MUGManager           (MUGManager const&) = delete;
+    MUGManager(MUGManager const&) = delete;
     MUGManager& operator=(MUGManager const&) = delete;
-    MUGManager           (MUGManager&&)      = delete;
-    MUGManager& operator=(MUGManager&&)      = delete;
+    MUGManager(MUGManager&&) = delete;
+    MUGManager& operator=(MUGManager&&) = delete;
 
     // getters
     static inline MUGManager* GetMUGManager() { return fMUGManager; }
@@ -45,10 +45,10 @@ class MUGManager {
 
     // setters
     inline void SetNThreads(int n_thr) { fNThreads = n_thr; }
-    inline void SetBatchMode(bool flag=true) { fBatchMode = flag; }
+    inline void SetBatchMode(bool flag = true) { fBatchMode = flag; }
     inline void SetPrintModulo(int n_ev) { fPrintModulo = n_ev > 0 ? n_ev : -1; }
 
-    inline void EnablePersistency(bool flag=true) { fIsPersistencyEnabled = flag; }
+    inline void EnablePersistency(bool flag = true) { fIsPersistencyEnabled = flag; }
     inline void IncludeMacroFile(std::string filename) { fMacroFileNames.emplace_back(filename); }
     void Initialize();
     void Run();
@@ -65,7 +65,8 @@ class MUGManager {
 
   private:
 
-    int fArgc; char** fArgv;
+    int fArgc;
+    char** fArgv;
     std::vector<std::string> fMacroFileNames;
     bool fIsRandControlled = false;
     bool fBatchMode = false;

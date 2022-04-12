@@ -10,10 +10,10 @@ class MUGUserAction : public G4VUserActionInitialization {
     inline MUGUserAction() = default;
     ~MUGUserAction() override = default;
 
-    MUGUserAction           (MUGUserAction const&) = delete;
+    MUGUserAction(MUGUserAction const&) = delete;
     MUGUserAction& operator=(MUGUserAction const&) = delete;
-    MUGUserAction           (MUGUserAction&&)      = delete;
-    MUGUserAction& operator=(MUGUserAction&&)      = delete;
+    MUGUserAction(MUGUserAction&&) = delete;
+    MUGUserAction& operator=(MUGUserAction&&) = delete;
 
     void Build() const override;
     void BuildForMaster() const override;

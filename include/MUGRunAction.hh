@@ -5,8 +5,8 @@
 #include <memory>
 #include <string>
 
-#include "G4UserRunAction.hh"
 #include "G4Accumulable.hh"
+#include "G4UserRunAction.hh"
 
 class G4Run;
 class MUGRun;
@@ -16,14 +16,14 @@ class MUGRunAction : public G4UserRunAction {
 
   public:
 
-    MUGRunAction(bool persistency=false);
+    MUGRunAction(bool persistency = false);
     MUGRunAction(MUGGenerator*, bool persistency = false);
     ~MUGRunAction();
 
-    MUGRunAction           (MUGRunAction const&) = delete;
+    MUGRunAction(MUGRunAction const&) = delete;
     MUGRunAction& operator=(MUGRunAction const&) = delete;
-    MUGRunAction           (MUGRunAction&&)      = delete;
-    MUGRunAction& operator=(MUGRunAction&&)      = delete;
+    MUGRunAction(MUGRunAction&&) = delete;
+    MUGRunAction& operator=(MUGRunAction&&) = delete;
 
     void SetupAnalysisManager();
     G4Run* GenerateRun() override;
@@ -33,12 +33,12 @@ class MUGRunAction : public G4UserRunAction {
 
     // getters
     inline std::vector<int>& GetPanelNrVec() { return fPanelNr; }
-    inline std::vector<float>& GetEdepVec()  { return fEdep; }
-    inline std::vector<float>& GetXHitVec()  { return fXHit; }
-    inline std::vector<float>& GetYHitVec()  { return fYHit; }
-    inline std::vector<float>& GetZHitVec()  { return fZHit; }
+    inline std::vector<float>& GetEdepVec() { return fEdep; }
+    inline std::vector<float>& GetXHitVec() { return fXHit; }
+    inline std::vector<float>& GetYHitVec() { return fYHit; }
+    inline std::vector<float>& GetZHitVec() { return fZHit; }
     inline std::vector<float>& GetThetaVec() { return fTheta; }
-    inline std::vector<float>& GetPhiVec()   { return fPhi; }
+    inline std::vector<float>& GetPhiVec() { return fPhi; }
 
   private:
 
@@ -51,7 +51,7 @@ class MUGRunAction : public G4UserRunAction {
     G4Accumulable<int> fTotalHits = 0;
 
     // per sub-detector
-    std::vector<int>   fPanelNr;
+    std::vector<int> fPanelNr;
     std::vector<float> fEdep;
     std::vector<float> fXHit;
     std::vector<float> fYHit;

@@ -1,11 +1,11 @@
 #ifndef _MUG_MANAGEMENT_STEPPING_ACTION_HH_
 #define _MUG_MANAGEMENT_STEPPING_ACTION_HH_
 
-#include <memory>
 #include <limits>
+#include <memory>
 
-#include "G4UserSteppingAction.hh"
 #include "CLHEP/Units/SystemOfUnits.h"
+#include "G4UserSteppingAction.hh"
 
 class G4Step;
 class MUGEventAction;
@@ -17,10 +17,10 @@ class MUGSteppingAction : public G4UserSteppingAction {
     MUGSteppingAction(MUGEventAction*);
     ~MUGSteppingAction() = default;
 
-    MUGSteppingAction           (MUGSteppingAction const&) = delete;
+    MUGSteppingAction(MUGSteppingAction const&) = delete;
     MUGSteppingAction& operator=(MUGSteppingAction const&) = delete;
-    MUGSteppingAction           (MUGSteppingAction&&)      = delete;
-    MUGSteppingAction& operator=(MUGSteppingAction&&)      = delete;
+    MUGSteppingAction(MUGSteppingAction&&) = delete;
+    MUGSteppingAction& operator=(MUGSteppingAction&&) = delete;
 
     void UserSteppingAction(const G4Step*) override;
 

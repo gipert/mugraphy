@@ -4,8 +4,8 @@
 #include <map>
 #include <memory>
 
-#include "G4VModularPhysicsList.hh"
 #include "G4GenericMessenger.hh"
+#include "G4VModularPhysicsList.hh"
 #include "globals.hh"
 
 class MUGProcessesMessenger;
@@ -15,10 +15,10 @@ class MUGPhysics : public G4VModularPhysicsList {
 
     MUGPhysics();
 
-    MUGPhysics           (MUGPhysics const&) = delete;
+    MUGPhysics(MUGPhysics const&) = delete;
     MUGPhysics& operator=(MUGPhysics const&) = delete;
-    MUGPhysics           (MUGPhysics&&)      = delete;
-    MUGPhysics& operator=(MUGPhysics&&)      = delete;
+    MUGPhysics(MUGPhysics&&) = delete;
+    MUGPhysics& operator=(MUGPhysics&&) = delete;
 
     void SetCuts() override;
 

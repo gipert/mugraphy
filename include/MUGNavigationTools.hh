@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
+#include "G4VPhysicalVolume.hh"
 
 // TODO: write function that locates points in global coordinates by using an
 // auxiliary G4Navigator. The G4Navigator instance must be unique and its
@@ -18,7 +18,7 @@ namespace MUGNavigationTools {
 
   void PrintListOfLogicalVolumes();
   void PrintListOfPhysicalVolumes();
-}
+} // namespace MUGNavigationTools
 
 #endif
 

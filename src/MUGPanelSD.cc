@@ -2,18 +2,18 @@
 
 #include <map>
 
+#include "G4GenericMessenger.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4SDManager.hh"
 #include "G4Step.hh"
-#include "G4Track.hh"
 #include "G4ThreeVector.hh"
-#include "G4GenericMessenger.hh"
+#include "G4Track.hh"
 
-#include "MUGPanelHit.hh"
 #include "MUGLog.hh"
+#include "MUGPanelHit.hh"
 
-MUGPanelSD::MUGPanelSD(const std::string& name, const std::string& hits_coll_name) :
-  G4VSensitiveDetector(name) {
+MUGPanelSD::MUGPanelSD(const std::string& name, const std::string& hits_coll_name)
+    : G4VSensitiveDetector(name) {
 
   G4VSensitiveDetector::collectionName.insert(hits_coll_name);
 
@@ -23,8 +23,7 @@ MUGPanelSD::MUGPanelSD(const std::string& name, const std::string& hits_coll_nam
 void MUGPanelSD::Initialize(G4HCofThisEvent* hit_coll) {
 
   // create hits collection object
-  fHitsCollection = new MUGPanelHitsCollection(
-      G4VSensitiveDetector::SensitiveDetectorName,
+  fHitsCollection = new MUGPanelHitsCollection(G4VSensitiveDetector::SensitiveDetectorName,
       G4VSensitiveDetector::collectionName[0]);
 
   // associate it with the G4HofThisEvent object
@@ -43,35 +42,28 @@ bool MUGPanelSD::ProcessHits(G4Step* step, G4TouchableHistory* /*history*/) {
 
   const auto& hit_vec = fHitsCollection->GetVector();
   const auto& result = std::find_if(hit_vec->begin(), hit_vec->end(),
-      [&panel_nr](MUGPanelHit* h){ return h->GetPanelNr() == (int)panel_nr; });
+      [&panel_nr](MUGPanelHit* h) { return h->GetPanelNr() == (int)panel_nr; });
 
   if (result == hit_vec->end()) {
     MUGLog::Out(MUGLog::debug, "No hit object found, initializing");
     hit = new MUGPanelHit();
     fHitsCollection->insert(hit);
-  }
-  else hit = *result;
+  } else hit = *result;
 
   // integrate hit info
   MUGLog::Out(MUGLog::debug, "Adding hit data to panel hit container");
-  hit->Add(
-    panel_nr,
-    step->GetTotalEnergyDeposit(),
-    step->GetPreStepPoint()->GetPosition(),
-    step->GetTrack()->GetMomentumDirection()
-  );
+  hit->Add(panel_nr, step->GetTotalEnergyDeposit(), step->GetPreStepPoint()->GetPosition(),
+      step->GetTrack()->GetMomentumDirection());
 
   return true;
 }
 
-void MUGPanelSD::EndOfEvent(G4HCofThisEvent* /*hit_coll*/) {
-  return;
-}
+void MUGPanelSD::EndOfEvent(G4HCofThisEvent* /*hit_coll*/) { return; }
 
 void MUGPanelSD::DefineCommands() {
 
-  fMessenger = std::make_unique<G4GenericMessenger>(this, "/MUG/SD/",
-      "Commands for controlling stuff");
+  fMessenger =
+      std::make_unique<G4GenericMessenger>(this, "/MUG/SD/", "Commands for controlling stuff");
 }
 
 // vim: tabstop=2 shiftwidth=2 expandtab

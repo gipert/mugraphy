@@ -1,10 +1,9 @@
 #include "MUGTrackingAction.hh"
 
-#include "MUGEventAction.hh"
 #include "G4Track.hh"
+#include "MUGEventAction.hh"
 
-MUGTrackingAction::MUGTrackingAction(MUGEventAction* eventaction) :
-  fEventAction(eventaction) {}
+MUGTrackingAction::MUGTrackingAction(MUGEventAction* eventaction) : fEventAction(eventaction) {}
 
 void MUGTrackingAction::PreUserTrackingAction(const G4Track* /*aTrack*/) {}
 

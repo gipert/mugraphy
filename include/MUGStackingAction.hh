@@ -17,19 +17,19 @@ class MUGStackingAction : public G4UserStackingAction {
     MUGStackingAction(MUGEventAction*);
     ~MUGStackingAction() = default;
 
-    MUGStackingAction           (MUGStackingAction const&) = delete;
+    MUGStackingAction(MUGStackingAction const&) = delete;
     MUGStackingAction& operator=(MUGStackingAction const&) = delete;
-    MUGStackingAction           (MUGStackingAction&&)      = delete;
-    MUGStackingAction& operator=(MUGStackingAction&&)      = delete;
+    MUGStackingAction(MUGStackingAction&&) = delete;
+    MUGStackingAction& operator=(MUGStackingAction&&) = delete;
 
     G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track* aTrack) override;
     void NewStage() override;
     void PrepareNewEvent() override;
 
     void BeginOfRunAction();
-    inline void EndOfRunAction() {};
+    inline void EndOfRunAction(){};
 
-    void KillSecondaries(bool flag=true) { fKillSecondaries = flag; }
+    void KillSecondaries(bool flag = true) { fKillSecondaries = flag; }
 
   private:
 

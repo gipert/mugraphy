@@ -1,11 +1,11 @@
 #ifndef _MUG_MATERIAL_TABLE_HH_
 #define _MUG_MATERIAL_TABLE_HH_
 
-#include <memory>
 #include <map>
+#include <memory>
 
-#include "globals.hh"
 #include "G4GenericMessenger.hh"
+#include "globals.hh"
 
 class G4Material;
 class MUGMaterialTable {
@@ -15,10 +15,10 @@ class MUGMaterialTable {
     MUGMaterialTable();
     ~MUGMaterialTable() = default;
 
-    MUGMaterialTable           (MUGMaterialTable const&) = delete;
+    MUGMaterialTable(MUGMaterialTable const&) = delete;
     MUGMaterialTable& operator=(MUGMaterialTable const&) = delete;
-    MUGMaterialTable           (MUGMaterialTable&&)      = delete;
-    MUGMaterialTable& operator=(MUGMaterialTable&&)      = delete;
+    MUGMaterialTable(MUGMaterialTable&&) = delete;
+    MUGMaterialTable& operator=(MUGMaterialTable&&) = delete;
 
     static G4Material* GetMaterial(std::string);
 

@@ -19,10 +19,10 @@ class MUGPanelSD : public G4VSensitiveDetector {
     MUGPanelSD(const std::string& name, const std::string& hits_coll_name);
     ~MUGPanelSD() = default;
 
-    MUGPanelSD           (MUGPanelSD const&) = delete;
+    MUGPanelSD(MUGPanelSD const&) = delete;
     MUGPanelSD& operator=(MUGPanelSD const&) = delete;
-    MUGPanelSD           (MUGPanelSD&&)      = delete;
-    MUGPanelSD& operator=(MUGPanelSD&&)      = delete;
+    MUGPanelSD(MUGPanelSD&&) = delete;
+    MUGPanelSD& operator=(MUGPanelSD&&) = delete;
 
     void Initialize(G4HCofThisEvent* hit_coll) override;
     bool ProcessHits(G4Step* step, G4TouchableHistory* history) override;
