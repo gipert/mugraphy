@@ -44,11 +44,6 @@ repos:
    - id: clang-format
      types_or: [c++]
 
-- repo: https://github.com/PyCQA/isort
-  rev: "5.10.1"
-  hooks:
-  - id: isort
-
 - repo: https://github.com/asottile/pyupgrade
   rev: "v2.32.0"
   hooks:
