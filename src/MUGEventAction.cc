@@ -60,13 +60,13 @@ void MUGEventAction::EndOfEventAction(const G4Event* event) {
 
   auto sd_man = G4SDManager::GetSDMpointer();
 
-  if (fHitCollID < 0) fHitCollID = sd_man->GetCollectionID("Detector/Panels");
-  if (fHitCollID < 0) {
+  auto hit_coll_id = sd_man->GetCollectionID("Detector/Panels");
+  if (hit_coll_id < 0) {
     MUGLog::Out(MUGLog::error, "Could not find sensitive detector Detector/Panels");
     return;
   }
 
-  auto hit_coll = dynamic_cast<MUGPanelHitsCollection*>(event->GetHCofThisEvent()->GetHC(fHitCollID));
+  auto hit_coll = dynamic_cast<MUGPanelHitsCollection*>(event->GetHCofThisEvent()->GetHC(hit_coll_id));
   if (!hit_coll) {
     MUGLog::Out(MUGLog::error, "Could not find hit collection associated with event");
     return;

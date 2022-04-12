@@ -105,8 +105,6 @@ void MUGRunAction::BeginOfRunAction(const G4Run*) {
         fMUGRun->GetNumberOfEventToBeProcessed());
   }
 
-  // FIXME: somehow the modulo is not recomputed when starting a new run with a
-  // different number of events
   auto g4manager = G4RunManager::GetRunManager();
   auto tot_events = g4manager->GetNumberOfEventsToBeProcessed();
   if (manager->GetPrintModulo() <= 0 and tot_events >= 100) manager->SetPrintModulo(tot_events/10);

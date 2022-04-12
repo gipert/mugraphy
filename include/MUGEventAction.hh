@@ -29,8 +29,6 @@ class MUGEventAction : public G4UserEventAction {
     std::unique_ptr<G4GenericMessenger> fMessenger;
     void DefineCommands();
     MUGRunAction* fRunAction = nullptr;
-
-    int fHitCollID = -1;
 };
 
 #endif
