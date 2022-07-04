@@ -6,7 +6,7 @@ exclude: ^include/(fmt|magic_enum|EcoMug|CLI11)/
 
 repos:
 - repo: https://github.com/psf/black
-  rev: "22.3.0"
+  rev: "22.6.0"
   hooks:
   - id: black
 
@@ -39,7 +39,7 @@ repos:
     args: ["-L", "hist"]
 
 - repo: https://github.com/pre-commit/mirrors-clang-format
-  rev: v14.0.5
+  rev: v14.0.6
   hooks:
    - id: clang-format
      types_or: [c++]
