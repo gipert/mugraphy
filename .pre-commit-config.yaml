@@ -6,7 +6,7 @@ exclude: ^include/(fmt|magic_enum|EcoMug|CLI11)/
 
 repos:
 - repo: https://github.com/psf/black
-  rev: "22.6.0"
+  rev: "22.8.0"
   hooks:
   - id: black
 
@@ -33,7 +33,7 @@ repos:
     additional_dependencies: [pyyaml]
 
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.1.0
+  rev: v2.2.1
   hooks:
   - id: codespell
     args: ["-L", "hist"]
@@ -45,7 +45,7 @@ repos:
      types_or: [c++]
 
 - repo: https://github.com/asottile/pyupgrade
-  rev: "v2.37.3"
+  rev: "v2.38.0"
   hooks:
   - id: pyupgrade
     args: ["--py36-plus"]
