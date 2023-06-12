@@ -50,7 +50,7 @@ class MUGDetectorConstruction : public G4VUserDetectorConstruction {
         "../share/mugraphy/gdml", // maybe we are using an installed version of mugraphy
         "../../../src/geom",      // or we have not installed it
         "../../src/geom", "../src/geom",
-        "../mugraphy/src/geom",   // out-of-source build
+        "../mugraphy/src/geom", // out-of-source build
         "src/geom"};
     std::unique_ptr<MUGMaterialTable> fMaterialTable;
     std::map<std::string, double> fPhysVolStepLimits;
