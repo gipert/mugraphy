@@ -27,7 +27,7 @@ class MUGStackingAction : public G4UserStackingAction {
     void PrepareNewEvent() override;
 
     void BeginOfRunAction();
-    inline void EndOfRunAction(){};
+    inline void EndOfRunAction() {};
 
     void KillSecondaries(bool flag = true) { fKillSecondaries = flag; }
 
